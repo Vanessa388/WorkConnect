@@ -187,14 +187,17 @@ export default function WorkerSignupPage() {
           reader.onerror = (error) => reject(error);
         });
 
-        const profileUploadRes = await fetch("http://localhost:5000/api/workers/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: profileBase64,
-            fileName: profilePhoto.name || "profile-photo.jpg",
-          }),
-        });
+        const profileUploadRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/workers/upload`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              imageBase64: profileBase64,
+              fileName: profilePhoto.name || "profile-photo.jpg",
+            }),
+          },
+        );
 
         const profileUploadData = await profileUploadRes.json();
         if (profileUploadData.success && profileUploadData.imageUrl) {
@@ -213,14 +216,17 @@ export default function WorkerSignupPage() {
           reader.onerror = (error) => reject(error);
         });
 
-        const uploadRes = await fetch("http://localhost:5000/api/workers/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: base64,
-            fileName: file.name || `worker-photo-${i}.jpg`,
-          }),
-        });
+        const uploadRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/workers/upload`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              imageBase64: base64,
+              fileName: file.name || `worker-photo-${i}.jpg`,
+            }),
+          },
+        );
 
         const uploadData = await uploadRes.json();
         if (uploadData.success && uploadData.imageUrl) {
@@ -229,7 +235,7 @@ export default function WorkerSignupPage() {
       }
 
       // 2. Register artisan user account
-      const authRes = await fetch("http://localhost:5000/api/auth/register", {
+      const authRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
