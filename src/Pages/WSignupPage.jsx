@@ -4,6 +4,7 @@ import SharedNavbar from "../components/SharedNavbar";
 
 export default function WorkerSignupPage() {
   const navigate = useNavigate();
+  const apiUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -141,6 +142,7 @@ export default function WorkerSignupPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+    const normalizedEmail = formData.email.trim().toLowerCase();
 
     if (formData.password.length < 8) {
       setError("Your password must be at least 8 characters long.");
@@ -188,7 +190,7 @@ export default function WorkerSignupPage() {
         });
 
         const profileUploadRes = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/workers/upload`,
+          `${apiUrl}/api/workers/upload`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -217,7 +219,7 @@ export default function WorkerSignupPage() {
         });
 
         const uploadRes = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/workers/upload`,
+          `${apiUrl}/api/workers/upload`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -235,13 +237,13 @@ export default function WorkerSignupPage() {
       }
 
       // 2. Register artisan user account
-      const authRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+      const authRes = await fetch(`${apiUrl}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           fullName: formData.fullName,
-          email: formData.email,
+          email: normalizedEmail,
           password: formData.password,
           phone: formData.phone,
           role: "artisan",
@@ -249,16 +251,31 @@ export default function WorkerSignupPage() {
       });
 
       const authData = await authRes.json();
+      let userId = authData.user ? authData.user.id : null;
+
       if (!authRes.ok || !authData.success) {
+        const loginRes = await fetch(`${apiUrl}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            email: normalizedEmail,
+            password: formData.password,
+          }),
+        });
+        const loginData = await loginRes.json();
+
+        if (!loginRes.ok || !loginData.success || loginData.user?.role !== "artisan") {
         setError(authData.message || "Registration failed. Please try again.");
         setLoading(false);
         return;
+        }
+
+        userId = loginData.user.id;
       }
 
-      const userId = authData.user ? authData.user.id : null;
-
       // 3. Create artisan profile in workers table
-      const workerRes = await fetch("http://localhost:5000/api/workers", {
+      const workerRes = await fetch(`${apiUrl}/api/workers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -268,7 +285,7 @@ export default function WorkerSignupPage() {
           skill: formData.skill,
           location: formData.location,
           phone: formData.phone,
-          email: formData.email,
+          email: normalizedEmail,
           about: formData.description,
           experience: formData.experience,
           image: profileImageUrl,

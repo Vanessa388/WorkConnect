@@ -7,12 +7,25 @@ const COOKIE_NAME = 'wc_session';
 const ADMIN_COOKIE_NAME = 'wc_admin_session';
 
 // Cookie options — HTTP-only means JS cannot read it (secure by default)
+const isProduction = process.env.NODE_ENV === "production";
+
+// Cookie options — HTTP-only means JS cannot read it (secure by default)
 const cookieOptions = {
   httpOnly: true,
-  sameSite: 'lax',
-  secure: false, // Set to true in production with HTTPS
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  sameSite: isProduction ? "none" : "lax",
+  secure: isProduction ? true : false,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  path: "/",
 };
+
+function getClearCookieOptions() {
+  return {
+    httpOnly: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction ? true : false,
+    path: "/",
+  };
+}
 
 function setSessionCookie(res, user) {
   const token = jwt.sign(
@@ -39,19 +52,33 @@ exports.register = async (req, res) => {
   try {
     const { full_name, fullName, email, password, role = 'customer', phone = '' } = req.body;
     const name = full_name || fullName;
+    const normalizedEmail = typeof email === 'string' ? email.toLowerCase().trim() : '';
+    const normalizedPhone = typeof phone === 'string' ? phone.trim() : '';
 
-    if (!name || !email || !password) {
+    if (!name || !normalizedEmail || !password) {
       return res.status(400).json({
         success: false,
         message: 'Name, email, and password are required.'
       });
     }
 
-    const { data: existingUser } = await supabase
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter a valid email address.'
+      });
+    }
+
+    const { data: existingUser, error: lookupError } = await supabase
       .from('users')
       .select('id')
-      .eq('email', email.toLowerCase().trim())
+      .ilike('email', normalizedEmail)
       .maybeSingle();
+
+    if (lookupError) {
+      console.error('Registration lookup error:', lookupError.message);
+      return res.status(500).json({ success: false, message: 'Unable to verify the email address. Please try again.' });
+    }
 
     if (existingUser) {
       return res.status(400).json({
@@ -65,10 +92,10 @@ exports.register = async (req, res) => {
       .insert([
         {
           full_name: name.trim(),
-          email: email.toLowerCase().trim(),
+          email: normalizedEmail,
           password: password,
           role: role,
-          phone: phone.trim()
+          phone: normalizedPhone
         }
       ])
       .select('id, full_name, email, role, phone, created_at')
@@ -76,7 +103,13 @@ exports.register = async (req, res) => {
 
     if (insertError) {
       console.error('Registration insert error:', insertError.message);
-      return res.status(500).json({ success: false, message: insertError.message });
+      if (insertError.code === '23505') {
+        return res.status(409).json({
+          success: false,
+          message: 'An account with this email already exists. Please log in.'
+        });
+      }
+      return res.status(500).json({ success: false, message: 'Unable to create your account. Please try again.' });
     }
 
     setSessionCookie(res, newUser);
@@ -204,8 +237,8 @@ exports.me = async (req, res) => {
  * POST /api/auth/logout
  */
 exports.logout = async (req, res) => {
-  res.clearCookie(COOKIE_NAME, { httpOnly: true, sameSite: 'lax' });
-  res.json({ success: true, message: 'Logged out successfully.' });
+  res.clearCookie(COOKIE_NAME, getClearCookieOptions());
+  res.json({ success: true, message: "Logged out successfully." });
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -290,8 +323,8 @@ exports.adminMe = async (req, res) => {
  * POST /api/auth/admin-logout
  */
 exports.adminLogout = async (req, res) => {
-  res.clearCookie(ADMIN_COOKIE_NAME, { httpOnly: true, sameSite: 'lax' });
-  res.json({ success: true, message: 'Admin session ended.' });
+  res.clearCookie(ADMIN_COOKIE_NAME, getClearCookieOptions());
+  res.json({ success: true, message: "Admin session ended." });
 };
 
 /**
@@ -304,12 +337,16 @@ exports.getCustomers = async (req, res) => {
     let { data, error } = await supabase
       .from('users')
       .select('id, full_name, email, phone, role, created_at')
+      .eq('role', 'customer')
       .order('id', { ascending: false });
 
     // Fallback if specific columns fail (e.g. if column was named 'name' or no 'created_at')
     if (error) {
       console.warn('Customer query specific columns warning, trying select(*):', error.message);
-      const fallback = await supabase.from('users').select('*');
+      const fallback = await supabase
+        .from('users')
+        .select('*')
+        .eq('role', 'customer');
       data = fallback.data;
       error = fallback.error;
     }

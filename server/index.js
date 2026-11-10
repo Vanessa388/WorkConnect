@@ -12,6 +12,7 @@ const reportRoutes = require('./routes/reportRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
 
 
@@ -23,11 +24,18 @@ app.use(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         process.env.FRONTEND_URL,
+        "https://work-connect-nu.vercel.app", 
       ].filter(Boolean);
 
-      if (!origin || allowedOrigins.includes(origin)) {
+     
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
         callback(null, true);
       } else {
+        console.log("BLOCKED CORS origin:", origin); 
         callback(new Error("Not allowed by CORS"));
       }
     },

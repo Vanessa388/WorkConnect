@@ -375,12 +375,30 @@ exports.createWorker = async (req, res) => {
       });
     }
 
+    if (user_id) {
+      const { data: existingProfile } = await supabase
+        .from('workers')
+        .select('*')
+        .eq('user_id', user_id)
+        .maybeSingle();
+
+      if (existingProfile) {
+        return res.status(200).json({
+          success: true,
+          message: 'Worker profile already exists.',
+          worker: existingProfile,
+          data: existingProfile
+        });
+      }
+    }
+
     const insertPayload = {
       user_id,
       name,
       skill,
       location,
       phone,
+      email,
       rating,
       reviews,
       image,

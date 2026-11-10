@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { getAdminSession, adminLogin, adminLogout } from "../utils/auth";
 
 export default function AdminDashboard() {
-  // ── Authentication State ──────────────────────────────────────────────────
+
   const [adminUser, setAdminUser] = useState(null);
   const [authChecking, setAuthChecking] = useState(true);
   const [loginEmail, setLoginEmail] = useState("");
@@ -10,15 +10,14 @@ export default function AdminDashboard() {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  // ── Navigation & Sidebar State ────────────────────────────────────────────
-  // Tabs: "overview", "workers", "customers", "reports", "add-worker"
+ 
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Workers Sub-tab: "all", "pending", "approved" (defaulting to "all" so all existing artisans show immediately)
+ 
   const [workerSubTab, setWorkerSubTab] = useState("all");
 
-  // ── Dynamic Database Data ─────────────────────────────────────────────────
+  
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalCustomers: 0,
@@ -39,11 +38,11 @@ export default function AdminDashboard() {
   const [loadingData, setLoadingData] = useState(false);
   const [notice, setNotice] = useState("");
 
-  // ── Worker Detail / Approval Modal State ──────────────────────────────────
+  
   const [inspectWorker, setInspectWorker] = useState(null);
   const [verifyLoading, setVerifyLoading] = useState(false);
 
-  // ── Add Worker Form State ─────────────────────────────────────────────────
+ 
   const [addForm, setAddForm] = useState({
     fullName: "",
     email: "",
@@ -60,11 +59,11 @@ export default function AdminDashboard() {
   const [addError, setAddError] = useState("");
   const [addSuccess, setAddSuccess] = useState("");
 
-  // Filter searches
+  
   const [workerSearch, setWorkerSearch] = useState("");
   const [customerSearch, setCustomerSearch] = useState("");
 
-  // ── Check Admin Session on Mount ──────────────────────────────────────────
+ 
   useEffect(() => {
     async function checkAuth() {
       try {
@@ -82,12 +81,12 @@ export default function AdminDashboard() {
     checkAuth();
   }, []);
 
-  // ── Load All Dynamic Database Data ────────────────────────────────────────
+ 
   async function loadAllData() {
     try {
       setLoadingData(true);
 
-      // 1. Fetch real stats
+      
       const statsRes = await fetch("http://localhost:5000/api/auth/stats", {
         credentials: "include",
       });
@@ -96,7 +95,7 @@ export default function AdminDashboard() {
         setStats(statsData.stats);
       }
 
-      // 2. Fetch all workers (including pending)
+     
       const workersRes = await fetch("http://localhost:5000/api/workers?all=true", {
         credentials: "include",
       });
@@ -105,7 +104,7 @@ export default function AdminDashboard() {
         setWorkers(workersData.workers);
       }
 
-      // 3. Fetch registered customers
+    
       const custRes = await fetch("http://localhost:5000/api/auth/customers", {
         credentials: "include",
       });
@@ -114,7 +113,7 @@ export default function AdminDashboard() {
         setCustomers(custData.customers);
       }
 
-      // 4. Fetch customer incident reports
+     
       const reportsRes = await fetch("http://localhost:5000/api/reports", {
         credentials: "include",
       });
@@ -129,7 +128,7 @@ export default function AdminDashboard() {
     }
   }
 
-  // ── Handle Admin Login ────────────────────────────────────────────────────
+ 
   async function handleAdminLogin(e) {
     e.preventDefault();
     if (!loginEmail || !loginPassword) {
@@ -157,13 +156,13 @@ export default function AdminDashboard() {
     }
   }
 
-  // ── Handle Admin Logout ───────────────────────────────────────────────────
+ 
   async function handleAdminLogout() {
     await adminLogout();
     setAdminUser(null);
   }
 
-  // ── Handle Worker Verification (Approve or Reject) ─────────────────────────
+ 
   async function handleVerify(workerId, approved) {
     try {
       setVerifyLoading(true);
@@ -207,7 +206,8 @@ export default function AdminDashboard() {
     }
   }
 
-  // ── Handle Worker Ban / Unban ──────────────────────────────────────────────
+  
+
   async function handleToggleBan(workerId, newBannedStatus) {
     try {
       setReportActionLoading(true);
@@ -223,12 +223,14 @@ export default function AdminDashboard() {
         return;
       }
 
-      // Update workers state
+
+      
       setWorkers((prev) =>
         prev.map((w) => (w.id === workerId ? { ...w, banned: newBannedStatus } : w))
       );
 
-      // Update inspection modal state if currently active
+     
+
       if (inspectReport && inspectReport.worker && (inspectReport.worker.id === workerId || inspectReport.worker_id === workerId)) {
         setInspectReport((prev) => ({
           ...prev,
@@ -236,7 +238,8 @@ export default function AdminDashboard() {
         }));
       }
 
-      // Update reports state
+     
+
       setReports((prev) =>
         prev.map((r) =>
           r.worker_id === workerId
@@ -258,7 +261,8 @@ export default function AdminDashboard() {
     }
   }
 
-  // ── Handle Updating Report Status (Resolve / Dismiss) ─────────────────────
+ 
+
   async function handleUpdateReport(reportId, status, notes = "") {
     try {
       setReportActionLoading(true);
@@ -288,7 +292,8 @@ export default function AdminDashboard() {
     }
   }
 
-  // ── Handle Admin "Add Worker" Submission ──────────────────────────────────
+
+
   async function handleAddWorkerSubmit(e) {
     e.preventDefault();
     if (!addForm.fullName.trim() || !addForm.skill || !addForm.location) {
@@ -301,7 +306,8 @@ export default function AdminDashboard() {
       setAddError("");
       setAddSuccess("");
 
-      // 1. Upload Profile Picture if provided
+      
+
       let profileImageUrl = "";
       if (addProfilePhoto) {
         const base64 = await new Promise((resolve, reject) => {
@@ -325,7 +331,8 @@ export default function AdminDashboard() {
         }
       }
 
-      // 2. Upload Portfolio Photos if provided
+     
+
       const portfolioUrls = [];
       for (let i = 0; i < addPortfolioPhotos.length; i++) {
         const file = addPortfolioPhotos[i];
@@ -350,7 +357,8 @@ export default function AdminDashboard() {
         }
       }
 
-      // 3. Create worker row directly
+     
+
       const createRes = await fetch("http://localhost:5000/api/workers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -366,7 +374,7 @@ export default function AdminDashboard() {
           working_hours: addForm.working_hours,
           image: profileImageUrl,
           portfolio: portfolioUrls,
-          verified: true, // Admin-created workers are approved immediately
+          verified: true, 
         }),
       });
 
@@ -376,7 +384,8 @@ export default function AdminDashboard() {
         return;
       }
 
-      // Success
+      
+
       setWorkers((prev) => [createData.worker, ...prev]);
       setStats((prev) => ({
         ...prev,
@@ -411,7 +420,7 @@ export default function AdminDashboard() {
     }
   }
 
-  // ── Filtered Worker & Customer Lists ──────────────────────────────────────
+ 
   const pendingWorkersList = workers.filter((w) => !w.verified);
   const approvedWorkersList = workers.filter((w) => w.verified);
 
@@ -440,7 +449,7 @@ export default function AdminDashboard() {
     )
     : customers;
 
-  // ── Filtered Reports List ─────────────────────────────────────────────────
+ 
   const pendingReportsList = reports.filter((r) => r.status === "pending");
   const resolvedReportsList = reports.filter((r) => r.status === "resolved");
 
@@ -453,7 +462,7 @@ export default function AdminDashboard() {
           ? reports.filter((r) => r.status === "dismissed")
           : reports;
 
-  // ── RENDER: Checking Session ──────────────────────────────────────────────
+ 
   if (authChecking) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f4f6f8" }}>
@@ -462,7 +471,8 @@ export default function AdminDashboard() {
     );
   }
 
-  // ── RENDER: Admin Login Screen ────────────────────────────────────────────
+ 
+
   if (!adminUser) {
     return (
       <div className="admin-login-screen">
@@ -602,7 +612,8 @@ export default function AdminDashboard() {
     );
   }
 
-  // ── RENDER: Authenticated Dashboard with Responsive Sidebar ───────────────
+ 
+
   return (
     <div className="admin-layout">
       <style>{`
@@ -1026,7 +1037,8 @@ export default function AdminDashboard() {
         }
       `}</style>
 
-      {/* ── Left Sidebar Navigation ─────────────────────────────────── */}
+      
+
       <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="admin-sidebar-header">
           <div>
@@ -1111,7 +1123,8 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* ── Main Content Container ─────────────────────────────────── */}
+      
+
       <main className="admin-main">
         {/* Top Navbar */}
         <header className="admin-topbar">
@@ -1144,9 +1157,7 @@ export default function AdminDashboard() {
         )}
 
         <div className="admin-body">
-          {/* ══════════════════════════════════════════════════════════ */}
-          {/* TAB 1: OVERVIEW & REAL DATABASE STATS                     */}
-          {/* ══════════════════════════════════════════════════════════ */}
+          
           {activeTab === "overview" && (
             <>
               <div className="stats-grid">
@@ -1191,7 +1202,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Pending Incident Reports Quick Review */}
+             
+
+
               {pendingReportsList.length > 0 && (
                 <div className="admin-card" style={{ borderLeft: "4px solid #dc2626", marginBottom: "20px" }}>
                   <div className="admin-card-head">
@@ -1213,7 +1226,8 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Pending Approvals Quick Review */}
+             
+
               {pendingWorkersList.length > 0 && (
                 <div className="admin-card" style={{ borderLeft: "4px solid #f59e0b" }}>
                   <div className="admin-card-head">
@@ -1234,7 +1248,8 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Recent Activity: Latest Database Registrations */}
+              
+
               <div className="admin-card">
                 <div className="admin-card-head">
                   <h2>Recent Worker Registrations</h2>
@@ -1297,9 +1312,8 @@ export default function AdminDashboard() {
             </>
           )}
 
-          {/* ══════════════════════════════════════════════════════════ */}
-          {/* TAB 2: WORKERS (PENDING, APPROVED, ALL WITH MODAL)        */}
-          {/* ══════════════════════════════════════════════════════════ */}
+          
+
           {activeTab === "workers" && (
             <div className="admin-card">
               <div className="admin-card-head">
@@ -1313,7 +1327,8 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              {/* Sub-tabs */}
+            
+
               <div className="subtabs-bar">
                 <button
                   className={`subtab-btn ${workerSubTab === "all" ? "active" : ""}`}
@@ -1428,9 +1443,8 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* ══════════════════════════════════════════════════════════ */}
-          {/* TAB 3: REGISTERED CUSTOMERS DIRECTORY                     */}
-          {/* ══════════════════════════════════════════════════════════ */}
+          
+
           {activeTab === "customers" && (
             <div className="admin-card">
               <div className="admin-card-head">
@@ -1487,9 +1501,9 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* ══════════════════════════════════════════════════════════ */}
-          {/* TAB 4: CUSTOMER INCIDENT REPORTS & ARTISAN BANNING        */}
-          {/* ══════════════════════════════════════════════════════════ */}
+         
+
+
           {activeTab === "reports" && (
             <div className="admin-card">
               <div className="admin-card-head">
@@ -1613,9 +1627,8 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* ══════════════════════════════════════════════════════════ */}
-          {/* TAB 4: ADD WORKER MANUALLY (FULL ONBOARDING FORM)          */}
-          {/* ══════════════════════════════════════════════════════════ */}
+          
+
           {activeTab === "add-worker" && (
             <div className="admin-card" style={{ maxWidth: "800px" }}>
               <div className="admin-card-head">
@@ -1796,8 +1809,9 @@ export default function AdminDashboard() {
         </div>
       </main>
 
-      {/* ── INSPECTION & APPROVAL POPUP MODAL ───────────────────────── */}
-      {/* ── REPORT INSPECTION & MODERATION MODAL ───────────────────── */}
+     
+
+     
       {inspectReport && (
         <div className="modal-overlay" onClick={() => setInspectReport(null)}>
           <div className="modal-body" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "680px" }}>
