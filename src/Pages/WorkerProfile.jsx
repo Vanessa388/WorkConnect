@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logout } from "../utils/auth";
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
+  /\/$/,
+  "",
+);
 
 export default function WorkerProfile() {
   const navigate = useNavigate();
@@ -43,13 +47,15 @@ export default function WorkerProfile() {
       const user = await getCurrentUser();
 
       if (!user) {
-        setError("You are not logged in. Please login to access your artisan dashboard.");
+        setError(
+          "You are not logged in. Please login to access your artisan dashboard.",
+        );
         setLoading(false);
         return;
       }
 
       // 2. Fetch workers from DB (including pending profiles for the logged-in artisan)
-      const response = await fetch("http://localhost:5000/api/workers?all=true", {
+      const response = await fetch(`${API}/api/workers?all=true`, {
         credentials: "include",
       });
       const data = await response.json();
@@ -57,7 +63,7 @@ export default function WorkerProfile() {
 
       if (!data.success) {
         setError(
-          "Could not load workers from the database. Please ensure the backend is running."
+          "Could not load workers from the database. Please ensure the backend is running.",
         );
         setLoading(false);
         return;
@@ -68,11 +74,11 @@ export default function WorkerProfile() {
           w.user_id === user.id ||
           String(w.user_id) === String(user.id) ||
           (user.phone && w.phone === user.phone) ||
-          (user.name && w.name === user.name)
+          (user.name && w.name === user.name),
       );
 
       if (!myProfile) {
-        const recoveryRes = await fetch("http://localhost:5000/api/workers", {
+        const recoveryRes = await fetch(`${API}/api/workers`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -83,7 +89,8 @@ export default function WorkerProfile() {
             location: "Location not set",
             phone: user.phone || "",
             email: user.email || "",
-            about: "Click 'Edit Profile' to add your bio and showcase your services.",
+            about:
+              "Click 'Edit Profile' to add your bio and showcase your services.",
             experience: "1+ years",
             image: "",
             portfolio: [],
@@ -101,9 +108,17 @@ export default function WorkerProfile() {
             skill: "Skill not set",
             location: "Location not set",
             phone: user.phone || "Phone not set",
-            about: "Click 'Edit Profile' to add your bio and showcase your services.",
+            about:
+              "Click 'Edit Profile' to add your bio and showcase your services.",
             experience: "1+ years",
-            available_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            available_days: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ],
             working_hours: "08:00 - 18:00",
             image: null,
             portfolio: [],
@@ -130,7 +145,9 @@ export default function WorkerProfile() {
       }
     } catch (err) {
       console.error("Failed to fetch worker profile:", err);
-      setError("Unable to connect to server. Please make sure backend is running.");
+      setError(
+        "Unable to connect to server. Please make sure backend is running.",
+      );
     } finally {
       setLoading(false);
     }
@@ -168,7 +185,9 @@ export default function WorkerProfile() {
       setEditSuccess("");
 
       let updatedImageUrl = worker.image;
-      let updatedPortfolio = Array.isArray(worker.portfolio) ? [...worker.portfolio] : [];
+      let updatedPortfolio = Array.isArray(worker.portfolio)
+        ? [...worker.portfolio]
+        : [];
 
       // 1. Upload new avatar if selected
       if (newAvatarFile) {
@@ -179,7 +198,7 @@ export default function WorkerProfile() {
           reader.onerror = (err) => reject(err);
         });
 
-        const uploadRes = await fetch("http://localhost:5000/api/workers/upload", {
+        const uploadRes = await fetch(`${API}/api/workers/upload`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -204,7 +223,7 @@ export default function WorkerProfile() {
           reader.onerror = (err) => reject(err);
         });
 
-        const uploadRes = await fetch("http://localhost:5000/api/workers/upload", {
+        const uploadRes = await fetch(`${API}/api/workers/upload`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -220,7 +239,7 @@ export default function WorkerProfile() {
       }
 
       // 3. Update profile in database
-      const updateRes = await fetch(`http://localhost:5000/api/workers/${worker.id}`, {
+      const updateRes = await fetch(`${API}/api/workers/${worker.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -267,8 +286,8 @@ export default function WorkerProfile() {
   const portfolioPhotos = Array.isArray(worker?.portfolio)
     ? worker.portfolio
     : typeof worker?.portfolio === "string"
-    ? worker.portfolio.replace(/[{}]/g, "").split(",").filter(Boolean)
-    : [];
+      ? worker.portfolio.replace(/[{}]/g, "").split(",").filter(Boolean)
+      : [];
 
   return (
     <div className="worker-profile-page">
@@ -692,9 +711,21 @@ export default function WorkerProfile() {
           <div style={{ textAlign: "center", padding: "60px 20px" }}>
             <span style={{ fontSize: "42px" }}>⚠️</span>
             <h2>Notice</h2>
-            <p style={{ color: "#666", maxWidth: "450px", margin: "10px auto" }}>{error}</p>
+            <p
+              style={{ color: "#666", maxWidth: "450px", margin: "10px auto" }}
+            >
+              {error}
+            </p>
             <button
-              style={{ padding: "10px 20px", background: "#ef5a20", color: "#fff", border: "none", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }}
+              style={{
+                padding: "10px 20px",
+                background: "#ef5a20",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: "700",
+                cursor: "pointer",
+              }}
               onClick={() => navigate("/login")}
             >
               Go to Login
@@ -722,11 +753,20 @@ export default function WorkerProfile() {
               >
                 <span style={{ fontSize: "28px" }}>🚫</span>
                 <div>
-                  <strong style={{ display: "block", fontSize: "16px", marginBottom: "2px" }}>
+                  <strong
+                    style={{
+                      display: "block",
+                      fontSize: "16px",
+                      marginBottom: "2px",
+                    }}
+                  >
                     Artisan Account Suspended / Banned
                   </strong>
                   <span style={{ fontSize: "13px", color: "#7f1d1d" }}>
-                    Your artisan profile has been temporarily suspended by WorkConnect administration following community reports. During suspension, your profile is hidden from the AI Chatbot and public directories.
+                    Your artisan profile has been temporarily suspended by
+                    WorkConnect administration following community reports.
+                    During suspension, your profile is hidden from the AI
+                    Chatbot and public directories.
                   </span>
                 </div>
               </div>
@@ -749,11 +789,20 @@ export default function WorkerProfile() {
               >
                 <span style={{ fontSize: "24px" }}>⏳</span>
                 <div>
-                  <strong style={{ display: "block", fontSize: "15px", marginBottom: "2px" }}>
+                  <strong
+                    style={{
+                      display: "block",
+                      fontSize: "15px",
+                      marginBottom: "2px",
+                    }}
+                  >
                     Account Verification Pending
                   </strong>
                   <span style={{ fontSize: "13px", color: "#7a3e0b" }}>
-                    Your artisan profile has been submitted and is currently awaiting admin verification in the Admin Portal. Once approved, your profile will immediately become public and visible to customers on the Chatbot.
+                    Your artisan profile has been submitted and is currently
+                    awaiting admin verification in the Admin Portal. Once
+                    approved, your profile will immediately become public and
+                    visible to customers on the Chatbot.
                   </span>
                 </div>
               </div>
@@ -774,7 +823,9 @@ export default function WorkerProfile() {
                   <h1>
                     {worker.name}
                     {worker.verified ? (
-                      <span className="profile-verified-badge">✓ Verified Artisan</span>
+                      <span className="profile-verified-badge">
+                        ✓ Verified Artisan
+                      </span>
                     ) : (
                       <span
                         className="profile-verified-badge"
@@ -791,12 +842,11 @@ export default function WorkerProfile() {
 
                   <div className="profile-contact-row">
                     <span>
-                      ☆ <strong>{worker.rating || "5.0"}</strong> ({worker.reviews || 0} reviews)
+                      ☆ <strong>{worker.rating || "5.0"}</strong> (
+                      {worker.reviews || 0} reviews)
                     </span>
                     {worker.phone && (
-                      <span style={{ color: "#444" }}>
-                        ☎ {worker.phone}
-                      </span>
+                      <span style={{ color: "#444" }}>☎ {worker.phone}</span>
                     )}
                   </div>
                 </div>
@@ -822,7 +872,8 @@ export default function WorkerProfile() {
                     About Me
                   </h2>
                   <p className="profile-about-text">
-                    {worker.about || "No bio added yet. Click 'Edit Profile' to introduce yourself."}
+                    {worker.about ||
+                      "No bio added yet. Click 'Edit Profile' to introduce yourself."}
                   </p>
                 </section>
 
@@ -837,7 +888,8 @@ export default function WorkerProfile() {
                       <span className="profile-info-icon">▦</span>
                       <span>
                         <strong>Days:</strong>{" "}
-                        {Array.isArray(worker.available_days) && worker.available_days.length > 0
+                        {Array.isArray(worker.available_days) &&
+                        worker.available_days.length > 0
                           ? worker.available_days.join(", ")
                           : worker.available_days || "Monday – Saturday"}
                       </span>
@@ -883,7 +935,14 @@ export default function WorkerProfile() {
               <div className="profile-right-column">
                 {/* Portfolio Section */}
                 <section className="profile-card">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "12px",
+                    }}
+                  >
                     <h2 className="profile-card-heading" style={{ margin: 0 }}>
                       <span className="profile-card-icon">▧</span>
                       My Portfolio Work
@@ -906,7 +965,9 @@ export default function WorkerProfile() {
                     </div>
                   ) : (
                     <p className="profile-no-photos">
-                      No portfolio work photos uploaded yet. Click <strong>Edit Profile</strong> to add photos of your past jobs!
+                      No portfolio work photos uploaded yet. Click{" "}
+                      <strong>Edit Profile</strong> to add photos of your past
+                      jobs!
                     </p>
                   )}
                 </section>
@@ -922,12 +983,28 @@ export default function WorkerProfile() {
               <h2 className="modal-title">Edit Your Artisan Profile</h2>
 
               {editError && (
-                <p style={{ color: "#d92d20", background: "#fef3f2", padding: "10px 14px", borderRadius: "8px", fontSize: "14px" }}>
+                <p
+                  style={{
+                    color: "#d92d20",
+                    background: "#fef3f2",
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                  }}
+                >
                   {editError}
                 </p>
               )}
               {editSuccess && (
-                <p style={{ color: "#027a48", background: "#ecfdf3", padding: "10px 14px", borderRadius: "8px", fontSize: "14px" }}>
+                <p
+                  style={{
+                    color: "#027a48",
+                    background: "#ecfdf3",
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                  }}
+                >
                   {editSuccess}
                 </p>
               )}
@@ -1025,7 +1102,9 @@ export default function WorkerProfile() {
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={(e) => setNewPortfolioFiles(Array.from(e.target.files || []))}
+                    onChange={(e) =>
+                      setNewPortfolioFiles(Array.from(e.target.files || []))
+                    }
                   />
                 </div>
 
