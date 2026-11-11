@@ -564,16 +564,19 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
       setSubmittingReview(true);
       setReviewError("");
       setReviewMessage("");
-      const res = await fetch(`http://localhost:5000/api/workers/${selectedWorker.id}/reviews`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          user_name: userName && userName !== "User" ? userName : "Customer",
-          rating: reviewRating,
-          comment: reviewComment.trim(),
-        }),
-      });
+      const res = await fetch(
+        `${API}/api/workers/${selectedWorker.id}/reviews`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            user_name: userName && userName !== "User" ? userName : "Customer",
+            rating: reviewRating,
+            comment: reviewComment.trim(),
+          }),
+        },
+      );
       const data = await res.json();
       if (data.success && data.review) {
         setWorkerReviews((prev) => [data.review, ...prev]);
