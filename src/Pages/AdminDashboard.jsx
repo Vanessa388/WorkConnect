@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { getAdminSession, adminLogin, adminLogout } from "../utils/auth";
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
+  /\/$/,
+  "",
+);
 
 export default function AdminDashboard() {
 
@@ -87,40 +91,49 @@ export default function AdminDashboard() {
       setLoadingData(true);
 
       
-      const statsRes = await fetch("http://localhost:5000/api/auth/stats", {
-        credentials: "include",
-      });
-      const statsData = await statsRes.json();
-      if (statsData.success && statsData.stats) {
-        setStats(statsData.stats);
-      }
+      
+const statsRes = await fetch(`${API}/api/auth/stats`, {
+  credentials: "include",
+});
 
-     
-      const workersRes = await fetch("http://localhost:5000/api/workers?all=true", {
-        credentials: "include",
-      });
-      const workersData = await workersRes.json();
-      if (workersData.success && Array.isArray(workersData.workers)) {
-        setWorkers(workersData.workers);
-      }
+const statsData = await statsRes.json();
 
-    
-      const custRes = await fetch("http://localhost:5000/api/auth/customers", {
-        credentials: "include",
-      });
-      const custData = await custRes.json();
-      if (custData.success && Array.isArray(custData.customers)) {
-        setCustomers(custData.customers);
-      }
+if (statsData.success && statsData.stats) {
+  setStats(statsData.stats);
+}
 
-     
-      const reportsRes = await fetch("http://localhost:5000/api/reports", {
-        credentials: "include",
-      });
-      const reportsData = await reportsRes.json();
-      if (reportsData.success && Array.isArray(reportsData.reports)) {
-        setReports(reportsData.reports);
-      }
+const workersRes = await fetch(`${API}/api/workers?all=true`, {
+  credentials: "include",
+});
+
+const workersData = await workersRes.json();
+
+if (workersData.success && Array.isArray(workersData.workers)) {
+  setWorkers(workersData.workers);
+}
+
+const custRes = await fetch(`${API}/api/auth/customers`, {
+  credentials: "include",
+});
+
+const custData = await custRes.json();
+
+if (custData.success && Array.isArray(custData.customers)) {
+  setCustomers(custData.customers);
+}
+
+const reportsRes = await fetch(`${API}/api/reports`, {
+  credentials: "include",
+});
+
+const reportsData = await reportsRes.json();
+
+if (reportsData.success && Array.isArray(reportsData.reports)) {
+  setReports(reportsData.reports);
+}
+
+
+
     } catch (err) {
       console.error("Failed to load admin data:", err);
     } finally {
@@ -166,7 +179,7 @@ export default function AdminDashboard() {
   async function handleVerify(workerId, approved) {
     try {
       setVerifyLoading(true);
-      const res = await fetch(`http://localhost:5000/api/workers/${workerId}/verify`, {
+      const res = await fetch(`${API}/api/workers/${workerId}/verify`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -211,7 +224,7 @@ export default function AdminDashboard() {
   async function handleToggleBan(workerId, newBannedStatus) {
     try {
       setReportActionLoading(true);
-      const res = await fetch(`http://localhost:5000/api/workers/${workerId}/ban`, {
+      const res = await fetch(`${API}/api/workers/${workerId}/ban`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -266,7 +279,7 @@ export default function AdminDashboard() {
   async function handleUpdateReport(reportId, status, notes = "") {
     try {
       setReportActionLoading(true);
-      const res = await fetch(`http://localhost:5000/api/reports/${reportId}`, {
+      const res = await fetch(`${API}/api/reports/${reportId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -317,7 +330,7 @@ export default function AdminDashboard() {
           reader.onerror = (err) => reject(err);
         });
 
-        const uploadRes = await fetch("http://localhost:5000/api/workers/upload", {
+        const uploadRes = await fetch(`${API}/api/workers/upload`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -343,7 +356,7 @@ export default function AdminDashboard() {
           reader.onerror = (err) => reject(err);
         });
 
-        const uploadRes = await fetch("http://localhost:5000/api/workers/upload", {
+        const uploadRes = await fetch(`${API}/api/workers/upload`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -359,7 +372,7 @@ export default function AdminDashboard() {
 
      
 
-      const createRes = await fetch("http://localhost:5000/api/workers", {
+      const createRes = await fetch(`${API}/api/workers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
