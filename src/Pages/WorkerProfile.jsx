@@ -201,6 +201,7 @@ export default function WorkerProfile() {
         const uploadRes = await fetch(`${API}/api/workers/upload`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({
             imageBase64: base64,
             fileName: newAvatarFile.name || "avatar.jpg",
@@ -226,6 +227,7 @@ export default function WorkerProfile() {
         const uploadRes = await fetch(`${API}/api/workers/upload`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({
             imageBase64: base64,
             fileName: file.name || `portfolio-${Date.now()}.jpg`,
