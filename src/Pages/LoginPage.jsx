@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SharedNavbar from "../components/SharedNavbar";
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
+  /\/$/,
+  "",
+);
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,55 +16,50 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
-      event.preventDefault();
-      setError("");
+    event.preventDefault();
+    setError("");
 
-      if (!email.trim() || !password) {
-        setError("Please enter your email and password.");
+    if (!email.trim() || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
+    setLoading(true);
+
+    //  replace with real API / Firebase check
+    try {
+      const response = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // sends/receives the HTTP-only session cookie
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(
+          data.message || "Login failed. Please check your credentials.",
+        );
         return;
       }
 
-      setLoading(true);
-
-      
-      //  replace with real API / Firebase check
-      try {
-        const response = await fetch("http://localhost:5000/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // sends/receives the HTTP-only session cookie
-          body: JSON.stringify({ email: email.trim(), password }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-          setError(data.message || "Login failed. Please check your credentials.");
-          return;
-        }
-
-        // Cookie is set by the server automatically — no localStorage needed
-        // Redirect based on user role from server response
-        if (data.user.role === "artisan") {
-          navigate("/worker-profile");
-        } else {
-          navigate("/chatbot");
-        }
-
-
-
-      } catch (err) {
-        console.error("Login error:", err);
-        setError("Unable to connect to server. Please ensure the backend is running.");
-      } finally {
-        setLoading(false);
+      // Cookie is set by the server automatically — no localStorage needed
+      // Redirect based on user role from server response
+      if (data.user.role === "artisan") {
+        navigate("/worker-profile");
+      } else {
+        navigate("/chatbot");
       }
-
-
-        
-
-
-    };
+    } catch (err) {
+      console.error("Login error:", err);
+      setError(
+        "Unable to connect to server. Please ensure the backend is running.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="login-page">
