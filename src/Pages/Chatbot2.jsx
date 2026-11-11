@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logout } from "../utils/auth";
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
+  /\/$/,
+  "",
+);
 
 // Local image imports from assets
 import plumberImage from "../assets/plumber.jpg";
@@ -456,7 +460,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
         setUserName(user.name || "User");
         if (user.role?.toLowerCase() === "artisan") {
           try {
-            const wRes = await fetch("http://localhost:5000/api/workers?all=true", { credentials: "include" });
+            const wRes = await fetch(`${API}/api/workers?all=true`, { credentials: "include" });
             const wData = await wRes.json();
             const myW = (wData.workers || []).find((w) => w.user_id === user.id || String(w.user_id) === String(user.id));
             if (myW && myW.verified === true) {
@@ -474,7 +478,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
 
       // 2. Fetch workers from backend database
       try {
-        const res = await fetch("http://localhost:5000/api/workers", {
+        const res = await fetch(`${API}/api/workers`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -488,7 +492,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
 
       // 3. Fetch user's persistent chat conversations from database
       try {
-        const histRes = await fetch("http://localhost:5000/api/chat/history", {
+        const histRes = await fetch(`${API}/api/chat/history`, {
           credentials: "include",
         });
         const histData = await histRes.json();
@@ -533,7 +537,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
     if (!worker?.id) return;
     try {
       setLoadingWorkerDetails(true);
-      const res = await fetch(`http://localhost:5000/api/workers/${worker.id}`);
+      const res = await fetch(`${API}/api/workers/${worker.id}`);
       const data = await res.json();
       if (data.success && data.data) {
         setSelectedWorker(data.data);
@@ -595,7 +599,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
 
   const persistChat = async (chatId, title, messages) => {
     try {
-      await fetch("http://localhost:5000/api/chat/history", {
+      await fetch(`${API}/api/chat/history`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -620,7 +624,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
 
     try {
       setSubmittingReport(true);
-      const res = await fetch("http://localhost:5000/api/reports", {
+      const res = await fetch(`${API}/api/reports`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -727,7 +731,7 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
 
     try {
       // 1. Query Gemini AI backend with Supabase database matching
-      const res = await fetch("http://localhost:5000/api/chat/message", {
+      const res = await fetch(`${API}/api/chat/message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

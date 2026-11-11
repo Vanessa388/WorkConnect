@@ -51,35 +51,100 @@ const KNOWN_LOCATIONS = [
   'calabar'
 ];
 
+
 function extractKeywords(text) {
-  const lower = text.toLowerCase();
+  const lower = text.toLowerCase().trim();
   let matchedSkill = null;
   let matchedLocation = null;
 
-  for (const skill of KNOWN_SKILLS) {
-    if (lower.includes(skill)) {
+  // Match exact profession names and common variations
+  const skillAliases = {
+    plumber: ["plumber", "plumbing"],
+    electrician: ["electrician", "electrical", "electricians"],
+    carpenter: ["carpenter", "carpentry"],
+    tailor: ["tailor", "tailoring", "fashion designer"],
+    painter: ["painter", "painting"],
+    mechanic: ["mechanic", "mechanics", "auto mechanic"],
+    hairdresser: [
+      "hairdresser",
+      "hair stylist",
+      "hairdresser",
+      "hairstylist",
+      "hair stylist",
+      "hair salon",
+      "hair braider",
+      "braider",
+      "braiding",
+      "wig maker",
+      "wig installation",
+    ],
+    welder: ["welder", "welding"],
+    cleaner: ["cleaner", "cleaning"],
+    "ac technician": ["ac technician", "air conditioner", "air conditioning"],
+    generator: ["generator repair", "generator technician"],
+    bricklayer: ["bricklayer", "mason", "bricklaying"],
+  };
+
+  for (const [skill, aliases] of Object.entries(skillAliases)) {
+    if (aliases.some((alias) => lower.includes(alias))) {
       matchedSkill = skill;
       break;
     }
   }
 
-  // Handle common colloquial variations
-  if (!matchedSkill) {
-    if (lower.includes('light') || lower.includes('nepa') || lower.includes('wire') || lower.includes('spark') || lower.includes('current')) matchedSkill = 'electrician';
-    else if (lower.includes('water') || lower.includes('tap') || lower.includes('pipe') || lower.includes('leak') || lower.includes('drain')) matchedSkill = 'plumber';
-    else if (lower.includes('wood') || lower.includes('chair') || lower.includes('table') || lower.includes('roof') || lower.includes('door') || lower.includes('bed')) matchedSkill = 'carpenter';
-    else if (lower.includes('cloth') || lower.includes('sew') || lower.includes('dress') || lower.includes('native') || lower.includes('agbada') || lower.includes('senator')) matchedSkill = 'tailor';
-    else if (lower.includes('car') || lower.includes('motor') || lower.includes('engine') || lower.includes('brake') || lower.includes('gear')) matchedSkill = 'mechanic';
-    else if (lower.includes('paint') || lower.includes('wall') || lower.includes('color')) matchedSkill = 'painter';
-    else if (lower.includes('hair') || lower.includes('braid') || lower.includes('barber') || lower.includes('wig')) matchedSkill = 'hairdresser';
-    else if (lower.includes('iron') || lower.includes('gate') || lower.includes('weld')) matchedSkill = 'welder';
-    else if (lower.includes('block') || lower.includes('cement') || lower.includes('mason')) matchedSkill = 'bricklayer';
-  }
-
+  // Match locations
   for (const loc of KNOWN_LOCATIONS) {
     if (lower.includes(loc)) {
       matchedLocation = loc;
       break;
+    }
+  }
+
+  // Only use these descriptions when no profession was detected
+  if (!matchedSkill) {
+    if (
+      lower.includes("light") ||
+      lower.includes("nepa") ||
+      lower.includes("wire") ||
+      lower.includes("spark")
+    ) {
+      matchedSkill = "electrician";
+    } else if (
+      lower.includes("water") ||
+      lower.includes("tap") ||
+      lower.includes("pipe") ||
+      lower.includes("leak")
+    ) {
+      matchedSkill = "plumber";
+    } else if (
+      lower.includes("wood") ||
+      lower.includes("chair") ||
+      lower.includes("table") ||
+      lower.includes("door")
+    ) {
+      matchedSkill = "carpenter";
+    } else if (
+      lower.includes("cloth") ||
+      lower.includes("sew") ||
+      lower.includes("dress") ||
+      lower.includes("agbada")
+    ) {
+      matchedSkill = "tailor";
+    } else if (
+      lower.includes("car") ||
+      lower.includes("motor") ||
+      lower.includes("engine")
+    ) {
+      matchedSkill = "mechanic";
+    } else if (lower.includes("paint") || lower.includes("wall")) {
+      matchedSkill = "painter";
+    } else if (
+      lower.includes("hair") ||
+      lower.includes("braid") ||
+      lower.includes("barber") ||
+      lower.includes("wig")
+    ) {
+      matchedSkill = "hairdresser";
     }
   }
 
@@ -189,7 +254,42 @@ exports.handleChatMessage = async (req, res) => {
     }
 
     // 2. Generate response using Google Gemini AI (if valid API key configured)
-    let aiReply = '';
+    
+let aiReply = "";
+
+if (genAI && !matchedSkill) {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+    });
+
+    const prompt = `
+You are WorkConnect AI.
+Reply in ${isPidgin ? "Nigerian Pidgin" : "Standard English"}.
+Keep your response to two sentences maximum.
+User message: "${message}"
+Help the user explain what service they need.
+Do not invent worker availability.
+    `.trim();
+
+    const result = await model.generateContent(prompt);
+    aiReply = (await result.response).text().trim();
+  } catch (error) {
+    console.warn("Gemini error:", error.message);
+  }
+}
+
+// Use the database-based response whenever a profession is detected
+if (matchedSkill || !aiReply) {
+  aiReply = generateConversationalReply(
+    message,
+    isPidgin,
+    matchedSkill,
+    matchedLocation,
+    matchedWorkers.length,
+  );
+}
+
 
     if (genAI) {
       try {
