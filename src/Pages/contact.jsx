@@ -1,5 +1,9 @@
 import { useState } from "react";
 import SharedNavbar from "../components/SharedNavbar";
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
+  /\/$/,
+  "",
+);
 
 export default function ContactPage() {
   const [form, setForm] = useState({
@@ -29,7 +33,7 @@ export default function ContactPage() {
 
     try {
       setSubmitting(true);
-      const response = await fetch("http://localhost:5000/api/contact", {
+      const response = await fetch(`${API}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
