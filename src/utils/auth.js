@@ -2,7 +2,11 @@
 // Shared helper — fetches current user or admin session from the backend via HTTP-only cookies.
 // No data is stored in localStorage.
 
-const API = "http://localhost:5000";
+
+const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
+  /\/$/,
+  "",
+);
 
 /**
  * Get the currently logged-in user from the server session.
@@ -12,18 +16,22 @@ export async function getCurrentUser() {
     const res = await fetch(`${API}/api/auth/me`, {
       credentials: "include",
     });
+
     const data = await res.json();
+
     if (data.success && data.user) {
       return data.user;
     }
+
     return null;
-  } catch {
+  } catch (error) {
+    console.error("Error getting current user:", error);
     return null;
   }
 }
 
 /**
- * Log out the current user by clearing the session cookie on the server.
+ * Log out the current user.
  */
 export async function logout() {
   try {
@@ -31,44 +39,51 @@ export async function logout() {
       method: "POST",
       credentials: "include",
     });
-  } catch {
-    // ignore network errors on logout
+  } catch (error) {
+    console.error("Logout error:", error);
   }
 }
 
 /**
- * Check if client currently has an active Admin session
+ * Check if there is an active Admin session.
  */
 export async function getAdminSession() {
   try {
     const res = await fetch(`${API}/api/auth/admin-me`, {
       credentials: "include",
     });
+
     const data = await res.json();
+
     if (data.success && data.admin) {
       return data.admin;
     }
+
     return null;
-  } catch {
+  } catch (error) {
+    console.error("Admin session error:", error);
     return null;
   }
 }
 
 /**
- * Log in to Admin portal
+ * Log in to Admin portal.
  */
 export async function adminLogin(email, password) {
   const res = await fetch(`${API}/api/auth/admin-login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     credentials: "include",
     body: JSON.stringify({ email, password }),
   });
+
   return res.json();
 }
 
 /**
- * Log out of Admin portal
+ * Log out of Admin portal.
  */
 export async function adminLogout() {
   try {
@@ -76,7 +91,7 @@ export async function adminLogout() {
       method: "POST",
       credentials: "include",
     });
-  } catch {
-    // ignore
+  } catch (error) {
+    console.error("Admin logout error:", error);
   }
 }
