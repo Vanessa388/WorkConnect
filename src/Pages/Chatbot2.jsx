@@ -564,37 +564,50 @@ export default function Chatbot2({ workers: propWorkers = [] }) {
       setSubmittingReview(true);
       setReviewError("");
       setReviewMessage("");
-      const res = await fetch(
-        `${API}/api/workers/${selectedWorker.id}/reviews`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            user_name: userName && userName !== "User" ? userName : "Customer",
-            rating: reviewRating,
-            comment: reviewComment.trim(),
-          }),
-        },
-      );
-      const data = await res.json();
-      if (data.success && data.review) {
-        setWorkerReviews((prev) => [data.review, ...prev]);
-        setReviewComment("");
-        setReviewRating(5);
-        setReviewMessage("Thank you! Your review has been published.");
-        // Refresh worker profile details for updated rating and count
-        const refRes = await fetch(`http://localhost:5000/api/workers/${selectedWorker.id}`);
-        const refData = await refRes.json();
-        if (refData.success && refData.data) {
-          setSelectedWorker(refData.data);
-        }
-      } else {
-        setReviewError(data.message || "Could not save review.");
-      }
-    } catch (err) {
-      console.error("Review submission error:", err);
-      setReviewError("Network error submitting review. Please try again.");
+      
+
+const res = await fetch(
+  `${API}/api/workers/${selectedWorker.id}/reviews`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      user_name: userName && userName !== "User" ? userName : "Customer",
+      rating: reviewRating,
+      comment: reviewComment.trim(),
+    }),
+  },
+);
+
+const data = await res.json();
+
+if (data.success && data.review) {
+  setWorkerReviews((prev) => [data.review, ...prev]);
+  setReviewComment("");
+  setReviewRating(5);
+  setReviewMessage("Thank you! Your review has been published.");
+  setReviewError("");
+
+  // Refresh worker profile details for updated rating and count
+  try {
+    const refRes = await fetch(
+      `${API}/api/workers/${selectedWorker.id}`,
+    );
+
+    const refData = await refRes.json();
+
+    if (refData.success && refData.data) {
+      setSelectedWorker(refData.data);
+    }
+  } catch (refreshError) {
+    console.error("Could not refresh worker profile:", refreshError);
+  }
+} else {
+  setReviewError(data.message || "Could not save review.");
+}
+    } catch (error) {
+      setReviewError("Could not submit review. Please try again.");
     } finally {
       setSubmittingReview(false);
     }
