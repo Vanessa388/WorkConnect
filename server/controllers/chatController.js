@@ -310,27 +310,23 @@ Use null when either value is unknown.
 
         const detected = JSON.parse(responseText);
 
-        // Accept only professions supported by WorkConnect
+// Update profession only when Gemini identifies a valid one
+if (
+  typeof detected.skill === "string" &&
+  KNOWN_SKILLS.includes(detected.skill.toLowerCase())
+) {
+  matchedSkill = detected.skill.toLowerCase();
+}
 
-        // Accept only professions supported by WorkConnect
-        // If Gemini returns null, keep the previously detected profession
-        if (
-          typeof detected.skill === "string" &&
-          KNOWN_SKILLS.includes(detected.skill.toLowerCase())
-        ) {
-          matchedSkill = detected.skill.toLowerCase();
-        }
+// Update location only when Gemini identifies one
+if (typeof detected.location === "string" && detected.location.trim()) {
+  matchedLocation = detected.location.trim().slice(0, 80);
+}
 
-        // Accept a location only when Gemini returns a valid string
-        if (typeof detected.location === "string" && detected.location.trim()) {
-          matchedLocation = detected.location.trim().slice(0, 80);
-        } else if (detected.location === null) {
-          matchedLocation = null;
-        }
-      } catch (error) {
-        console.warn("Gemini intent detection notice:", error.message);
-      }
-    }
+} catch (error) {
+  console.warn("Gemini intent detection notice:", error.message);
+}
+}
 
     // 1. Fetch matching workers from Supabase (ONLY verified & non-banned workers)
 
@@ -342,13 +338,8 @@ Use null when either value is unknown.
 
       if (matchedSkill) {
         reply = isPidgin
-          
-if (matchedSkill) {
-  reply = isPidgin
-    ? `I don understand! Na ${matchedSkill} you need. 😊 Which town or area you dey so make I find worker for you?`
-    : `I understand! You need a ${matchedSkill}. 😊 Which town or area are you located in so I can find matching workers for you?`;
-}
-
+          ? `I don understand! Na ${matchedSkill} you need. 😊 Which town or area you dey so make I find worker for you?`
+          : `I understand! You need a ${matchedSkill}. 😊 Which town or area are you located in so I can find matching workers for you?`;
       } else {
         reply = isPidgin
           ? "No wahala! 😊 Abeg tell me more about the problem or the service you need."
@@ -472,10 +463,10 @@ Your response:
     });
   } catch (err) {
     console.error('Server error in handleChatMessage:', err.message);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       reply: 'An error occurred while processing your request. Please try again.',
-      workers: []
+      workers: [],
     });
   }
 };
@@ -493,12 +484,15 @@ exports.getChatHistory = async (req, res) => {
       try {
         const decoded = jwt.verify(token, JWT_SECRET);
         userId = decoded.id;
-      } catch {
+      } catch (err) {
         // guest or expired
       }
     }
 
-    let query = supabase.from('chat_conversations').select('*').order('updated_at', { ascending: false });
+    let query = supabase
+      .from('chat_conversations')
+      .select('*')
+      .order('updated_at', { ascending: false });
 
     if (userId) {
       query = query.eq('user_id', userId);
