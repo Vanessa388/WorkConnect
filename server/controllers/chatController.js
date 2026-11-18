@@ -243,7 +243,23 @@ exports.handleChatMessage = async (req, res) => {
     }
 
     // First, use the existing keyword matching as a fallback
-    let { matchedSkill, matchedLocation } = extractKeywords(message);
+    
+
+
+// Read previous customer messages so WorkConnect remembers their request
+const conversationHistory = Array.isArray(history) ? history.slice(-10) : [];
+
+const previousUserMessages = conversationHistory
+  .filter((msg) => msg.from === "user")
+  .map((msg) => msg.text)
+  .filter(Boolean);
+
+// Combine previous customer messages with the latest message
+const conversationText = [...previousUserMessages, message].join(" ");
+
+// Detect profession and location from the conversation
+let { matchedSkill, matchedLocation } = extractKeywords(conversationText);
+
 
     // Then allow Gemini to understand the customer's actual request
     if (genAI) {
@@ -295,13 +311,14 @@ Use null when either value is unknown.
         const detected = JSON.parse(responseText);
 
         // Accept only professions supported by WorkConnect
+
+        // Accept only professions supported by WorkConnect
+        // If Gemini returns null, keep the previously detected profession
         if (
           typeof detected.skill === "string" &&
           KNOWN_SKILLS.includes(detected.skill.toLowerCase())
         ) {
           matchedSkill = detected.skill.toLowerCase();
-        } else if (detected.skill === null) {
-          matchedSkill = null;
         }
 
         // Accept a location only when Gemini returns a valid string
@@ -325,8 +342,13 @@ Use null when either value is unknown.
 
       if (matchedSkill) {
         reply = isPidgin
-          ? `I understand! You need a ${matchedSkill}. 😊 Which town or area should I search in for you?`
-          : `I understand! You need a ${matchedSkill}. 😊 Which town or area are you located in so I can find matching workers for you?`;
+          
+if (matchedSkill) {
+  reply = isPidgin
+    ? `I don understand! Na ${matchedSkill} you need. 😊 Which town or area you dey so make I find worker for you?`
+    : `I understand! You need a ${matchedSkill}. 😊 Which town or area are you located in so I can find matching workers for you?`;
+}
+
       } else {
         reply = isPidgin
           ? "No wahala! 😊 Abeg tell me more about the problem or the service you need."
