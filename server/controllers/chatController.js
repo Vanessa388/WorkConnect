@@ -209,30 +209,108 @@ function generateConversationalReply(message, isPidgin, matchedSkill, matchedLoc
  */
 exports.handleChatMessage = async (req, res) => {
   try {
-    const { message, language = 'pidgin' } = req.body;
-
-    if (!message || typeof message !== 'string') {
+    const { message, language = "pidgin", history = [] } = req.body;
+    if (!message || typeof message !== "string") {
       return res.status(400).json({
         success: false,
-        reply: language === 'pidgin'
-          ? 'Abeg type wetin you need make I assist you!'
-          : 'Please enter a message so I can assist you.'
+        reply:
+          language === "pidgin"
+            ? "Abeg type wetin you need make I assist you!"
+            : "Please enter a message so I can assist you.",
       });
     }
 
-    const isPidgin = language.toLowerCase() === 'pidgin';
-    const { matchedSkill, matchedLocation } = extractKeywords(message);
+    
+const isPidgin = language.toLowerCase() === "pidgin";
+
+// First, use the existing keyword matching as a fallback
+let { matchedSkill, matchedLocation } = extractKeywords(message);
+
+// Then allow Gemini to understand the customer's actual request
+if (genAI) {
+  try {
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json",
+      },
+    });
+
+    const prompt = `
+You are an intelligent service-request detector for WorkConnect.
+
+Read the customer's conversation and identify:
+1. The profession or service they need.
+2. Their requested location.
+
+AVAILABLE PROFESSIONS:
+${JSON.stringify(KNOWN_SKILLS)}
+
+PREVIOUS CONVERSATION:
+${JSON.stringify(Array.isArray(history) ? history.slice(-10) : [])}
+
+LATEST MESSAGE:
+${message}
+
+RULES:
+- Understand descriptions of problems, not just profession names.
+- Use previous messages to understand follow-up questions.
+- If the customer changes their location, use the new location.
+- If the customer has not mentioned a profession, return null for skill.
+- If the customer has not mentioned a location, return null for location.
+- Only select a profession from the AVAILABLE PROFESSIONS list.
+- Do not assume a location that the customer has not provided.
+
+Return ONLY valid JSON in this exact format:
+{
+  "skill": "plumber",
+  "location": "Nsukka"
+}
+
+Use null when either value is unknown.
+`;
+
+    const result = await model.generateContent(prompt);
+    const responseText = (await result.response).text();
+
+    const detected = JSON.parse(responseText);
+
+    // Accept only professions supported by WorkConnect
+    if (
+      typeof detected.skill === "string" &&
+      KNOWN_SKILLS.includes(detected.skill.toLowerCase())
+    ) {
+      matchedSkill = detected.skill.toLowerCase();
+    } else if (detected.skill === null) {
+      matchedSkill = null;
+    }
+
+    // Accept a location only when Gemini returns a valid string
+    if (typeof detected.location === "string" && detected.location.trim()) {
+      matchedLocation = detected.location.trim().slice(0, 80);
+    } else if (detected.location === null) {
+      matchedLocation = null;
+    }
+  } catch (error) {
+    console.warn("Gemini intent detection notice:", error.message);
+  }
+}
+
 
     // 1. Fetch matching workers from Supabase (ONLY verified & non-banned workers)
     let matchedWorkers = [];
     try {
-      let query = supabase.from('workers').select('*').eq('verified', true).neq('banned', true);
+      let query = supabase
+        .from("workers")
+        .select("*")
+        .eq("verified", true)
+        .neq("banned", true);
 
       if (matchedSkill) {
-        query = query.ilike('skill', `%${matchedSkill}%`);
+        query = query.ilike("skill", `%${matchedSkill}%`);
       }
       if (matchedLocation) {
-        query = query.ilike('location', `%${matchedLocation}%`);
+        query = query.ilike("location", `%${matchedLocation}%`);
       }
 
       const { data: workers, error: dbError } = await query.limit(6);
@@ -241,92 +319,93 @@ exports.handleChatMessage = async (req, res) => {
       } else if (matchedSkill) {
         // Fallback: search just by skill if location specific didn't return any
         const { data: fallbackWorkers } = await supabase
-          .from('workers')
-          .select('*')
-          .eq('verified', true)
-          .neq('banned', true)
-          .ilike('skill', `%${matchedSkill}%`)
+          .from("workers")
+          .select("*")
+          .eq("verified", true)
+          .neq("banned", true)
+          .ilike("skill", `%${matchedSkill}%`)
           .limit(4);
         if (fallbackWorkers) matchedWorkers = fallbackWorkers;
       }
     } catch (dbErr) {
-      console.warn('Supabase worker query notice:', dbErr.message);
+      console.warn("Supabase worker query notice:", dbErr.message);
     }
 
-    // 2. Generate response using Google Gemini AI (if valid API key configured)
-    
-let aiReply = "";
+   
 
-if (genAI && !matchedSkill) {
-  try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-    });
+    // 2. Generate response using Google Gemini AI
 
-    const prompt = `
-You are WorkConnect AI.
-Reply in ${isPidgin ? "Nigerian Pidgin" : "Standard English"}.
-Keep your response to two sentences maximum.
-User message: "${message}"
-Help the user explain what service they need.
-Do not invent worker availability.
-    `.trim();
+    let aiReply = "";
 
-    const result = await model.generateContent(prompt);
-    aiReply = (await result.response).text().trim();
-  } catch (error) {
-    console.warn("Gemini error:", error.message);
-  }
-}
-
-// Use the database-based response whenever a profession is detected
-if (matchedSkill || !aiReply) {
-  aiReply = generateConversationalReply(
-    message,
-    isPidgin,
-    matchedSkill,
-    matchedLocation,
-    matchedWorkers.length,
-  );
-}
-
+    // Keep only the last 10 conversation messages
+    const recentHistory = Array.isArray(history) ? history.slice(-10) : [];
 
     if (genAI) {
       try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({
+          model: "gemini-1.5-flash",
+        });
 
         const prompt = `
-You are WorkConnect AI, a smart, friendly Nigerian assistant for WorkConnect (connecting users with verified local artisans).
+You are WorkConnect AI, a friendly and helpful Nigerian assistant.
 
-User language: ${isPidgin ? 'Nigerian Pidgin English (e.g., "How far", "I don find", "No wahala")' : 'Standard English'}.
-User message: "${message}"
+Your job is to help customers find skilled artisans on WorkConnect.
 
-Artisans in database: ${matchedWorkers.length > 0 ? `${matchedWorkers.length} verified artisan(s) found in database` : 'None directly found'}.
+LANGUAGE:
+${isPidgin ? "Reply in natural Nigerian Pidgin English." : "Reply in friendly Standard English."}
 
-Instructions:
-1. Respond ${isPidgin ? 'strictly in natural Nigerian Pidgin English' : 'in friendly, professional Standard English'}.
-2. Keep response to 2 sentences maximum.
-3. If artisans were found, invite user to check the profile cards below.
-4. If not found, tell user to mention their trade (plumber, electrician, etc.) and town.
-5. Do not write names in markdown list; cards appear below.
-        `.trim();
+PREVIOUS CONVERSATION:
+${JSON.stringify(recentHistory)}
+
+LATEST CUSTOMER MESSAGE:
+${message}
+
+DATABASE SEARCH RESULTS:
+
+${JSON.stringify(
+  matchedWorkers.map((worker) => ({
+    id: worker.id,
+    name: worker.name,
+    skill: worker.skill || worker.profession,
+    location: worker.location,
+    rating: worker.rating,
+    reviews: worker.reviews,
+  })),
+  null,
+  2,
+)}
+
+INSTRUCTIONS:
+1. Understand the latest message using the previous conversation for context.
+2. If the customer is just greeting you, greet them naturally.
+3. If the customer has not explained what service they need, politely ask.
+4. If a profession is detected but the location is missing, ask for their location.
+5. If verified workers were found, invite the customer to view the worker cards below.
+6. If no workers were found, explain this honestly and ask whether they would like to try another location.
+7. Only discuss workers included in the DATABASE SEARCH RESULTS.
+8. Never invent worker names, ratings, prices, locations, or availability.
+9. Never claim that a worker was found unless the database search confirms it.
+10. Do not generate worker cards or repeat worker details unnecessarily. The frontend displays the cards.
+11. If workers were found, explain briefly that the customer can view their profiles below.
+
+Your response:
+    `.trim();
 
         const result = await model.generateContent(prompt);
-        const response = await result.response;
-        aiReply = response.text().trim();
+        aiReply = (await result.response).text().trim();
       } catch (geminiError) {
-        console.warn('Gemini API call notice, falling back to conversational generator:', geminiError.message);
+        console.warn("Gemini API call notice:", geminiError.message);
       }
     }
 
-    // 3. Robust multi-lingual conversational reply if Gemini wasn't called or failed
+    // 3. Use the existing conversational fallback if Gemini fails
     if (!aiReply) {
       aiReply = generateConversationalReply(
         message,
         isPidgin,
         matchedSkill,
         matchedLocation,
-        matchedWorkers.length
+        matchedWorkers.length,
       );
     }
 
@@ -335,7 +414,7 @@ Instructions:
       reply: aiReply,
       matchedSkill,
       matchedLocation,
-      workers: matchedWorkers
+      workers: matchedWorkers,
     });
   } catch (err) {
     console.error('Server error in handleChatMessage:', err.message);
