@@ -220,23 +220,42 @@ exports.handleChatMessage = async (req, res) => {
       });
     }
 
-    
-const isPidgin = language.toLowerCase() === "pidgin";
+    const isPidgin = language.toLowerCase() === "pidgin";
 
-// First, use the existing keyword matching as a fallback
-let { matchedSkill, matchedLocation } = extractKeywords(message);
+    // Handle greetings without searching for workers
+    const greetingMessage = message.trim().toLowerCase();
 
-// Then allow Gemini to understand the customer's actual request
-if (genAI) {
-  try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      generationConfig: {
-        responseMimeType: "application/json",
-      },
-    });
+    const isGreeting =
+      /^(hi|hello|hey|hey there|hi there|good morning|good afternoon|good evening|how are you|how are you doing|what's up|whats up|how far|how you dey|sup)[.!?,\s]*$/i.test(
+        greetingMessage,
+      );
 
-    const prompt = `
+    if (isGreeting) {
+      return res.json({
+        success: true,
+        reply: isPidgin
+          ? "Hello! 😊 Welcome to WorkConnect. How I fit help you today?"
+          : "Hello! 😊 Welcome to WorkConnect. How can I help you today?",
+        matchedSkill: null,
+        matchedLocation: null,
+        workers: [],
+      });
+    }
+
+    // First, use the existing keyword matching as a fallback
+    let { matchedSkill, matchedLocation } = extractKeywords(message);
+
+    // Then allow Gemini to understand the customer's actual request
+    if (genAI) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: "gemini-1.5-flash",
+          generationConfig: {
+            responseMimeType: "application/json",
+          },
+        });
+
+        const prompt = `
 You are an intelligent service-request detector for WorkConnect.
 
 Read the customer's conversation and identify:
@@ -270,68 +289,57 @@ Return ONLY valid JSON in this exact format:
 Use null when either value is unknown.
 `;
 
-    const result = await model.generateContent(prompt);
-    const responseText = (await result.response).text();
+        const result = await model.generateContent(prompt);
+        const responseText = (await result.response).text();
 
-    const detected = JSON.parse(responseText);
+        const detected = JSON.parse(responseText);
 
-    // Accept only professions supported by WorkConnect
-    if (
-      typeof detected.skill === "string" &&
-      KNOWN_SKILLS.includes(detected.skill.toLowerCase())
-    ) {
-      matchedSkill = detected.skill.toLowerCase();
-    } else if (detected.skill === null) {
-      matchedSkill = null;
+        // Accept only professions supported by WorkConnect
+        if (
+          typeof detected.skill === "string" &&
+          KNOWN_SKILLS.includes(detected.skill.toLowerCase())
+        ) {
+          matchedSkill = detected.skill.toLowerCase();
+        } else if (detected.skill === null) {
+          matchedSkill = null;
+        }
+
+        // Accept a location only when Gemini returns a valid string
+        if (typeof detected.location === "string" && detected.location.trim()) {
+          matchedLocation = detected.location.trim().slice(0, 80);
+        } else if (detected.location === null) {
+          matchedLocation = null;
+        }
+      } catch (error) {
+        console.warn("Gemini intent detection notice:", error.message);
+      }
     }
-
-    // Accept a location only when Gemini returns a valid string
-    if (typeof detected.location === "string" && detected.location.trim()) {
-      matchedLocation = detected.location.trim().slice(0, 80);
-    } else if (detected.location === null) {
-      matchedLocation = null;
-    }
-  } catch (error) {
-    console.warn("Gemini intent detection notice:", error.message);
-  }
-}
-
 
     // 1. Fetch matching workers from Supabase (ONLY verified & non-banned workers)
+
+    // 1. Search for workers only when profession AND location are known
     let matchedWorkers = [];
-    try {
-      let query = supabase
-        .from("workers")
-        .select("*")
-        .eq("verified", true)
-        .neq("banned", true);
 
-      if (matchedSkill) {
-        query = query.ilike("skill", `%${matchedSkill}%`);
-      }
-      if (matchedLocation) {
-        query = query.ilike("location", `%${matchedLocation}%`);
-      }
-
-      const { data: workers, error: dbError } = await query.limit(6);
-      if (!dbError && workers && workers.length > 0) {
-        matchedWorkers = workers;
-      } else if (matchedSkill) {
-        // Fallback: search just by skill if location specific didn't return any
-        const { data: fallbackWorkers } = await supabase
+    if (matchedSkill && matchedLocation) {
+      try {
+        const { data: workers, error: dbError } = await supabase
           .from("workers")
           .select("*")
           .eq("verified", true)
           .neq("banned", true)
           .ilike("skill", `%${matchedSkill}%`)
-          .limit(4);
-        if (fallbackWorkers) matchedWorkers = fallbackWorkers;
-      }
-    } catch (dbErr) {
-      console.warn("Supabase worker query notice:", dbErr.message);
-    }
+          .ilike("location", `%${matchedLocation}%`)
+          .limit(6);
 
-   
+        if (dbError) {
+          console.warn("Supabase worker query notice:", dbError.message);
+        } else if (workers) {
+          matchedWorkers = workers;
+        }
+      } catch (dbErr) {
+        console.warn("Supabase worker query notice:", dbErr.message);
+      }
+    }
 
     // 2. Generate response using Google Gemini AI
 
