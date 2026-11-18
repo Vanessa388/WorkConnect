@@ -318,6 +318,30 @@ Use null when either value is unknown.
     // 1. Fetch matching workers from Supabase (ONLY verified & non-banned workers)
 
     // 1. Search for workers only when profession AND location are known
+
+    // Ask for location before checking worker availability
+    if (!matchedLocation) {
+      let reply;
+
+      if (matchedSkill) {
+        reply = isPidgin
+          ? `I understand! You need a ${matchedSkill}. 😊 Which town or area should I search in for you?`
+          : `I understand! You need a ${matchedSkill}. 😊 Which town or area are you located in so I can find matching workers for you?`;
+      } else {
+        reply = isPidgin
+          ? "No wahala! 😊 Abeg tell me more about the problem or the service you need."
+          : "I'd be happy to help! 😊 Could you tell me more about the problem or the service you need?";
+      }
+
+      return res.json({
+        success: true,
+        reply,
+        matchedSkill,
+        matchedLocation: null,
+        workers: [],
+      });
+    }
+
     let matchedWorkers = [];
 
     if (matchedSkill && matchedLocation) {
