@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import defaultArtisanPhoto from "../assets/worker-profile.jpg";
+import { useTheme } from "../ThemeContext";
 
 export default function WorkerProfileCards() {
   const [workerList, setWorkerList] = useState([]);
+  const { theme, toggleTheme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProfession, setSelectedProfession] = useState("All Professions");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
@@ -530,6 +532,156 @@ export default function WorkerProfileCards() {
             font-size: 20px;
           }
         }
+
+
+/* =====================================
+   WORKER PROFILE CARDS DARK MODE
+===================================== */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .worker-cards-page {
+  background: #101a20 !important;
+  color: #f1f5f7;
+}
+
+/* Header */
+:root[data-theme="dark"] .workers-header {
+  background: #17262e;
+  border-color: #354b55;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .workers-brand h1 {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .workers-icon-button {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .workers-icon-button:hover {
+  background: #354b55;
+}
+
+:root[data-theme="dark"] .workers-theme-button {
+  font-size: 23px;
+}
+
+/* Page heading */
+:root[data-theme="dark"] .workers-title {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .workers-description {
+  color: #aebbc1;
+}
+
+/* Search and filters */
+:root[data-theme="dark"] .workers-search,
+:root[data-theme="dark"] .workers-select {
+  background: #1d3039;
+  border-color: #40545e;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .workers-search::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .workers-search:focus,
+:root[data-theme="dark"] .workers-select:focus {
+  border-color: #ff7542;
+  box-shadow: 0 0 0 3px rgba(244, 119, 33, 0.15);
+}
+
+:root[data-theme="dark"] .workers-select option {
+  background: #263840;
+  color: #ffffff;
+}
+
+/* Worker cards */
+:root[data-theme="dark"] .worker-card {
+  background: #1d3039;
+  border-color: #354b55;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .worker-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme="dark"] .worker-name {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .worker-verified {
+  background: #214b35;
+  color: #8ce0a8;
+}
+
+:root[data-theme="dark"] .verified-check {
+  background: #24b783;
+  color: #ffffff;
+}
+
+/* Rating and worker details */
+:root[data-theme="dark"] .worker-rating {
+  color: #d0dadd;
+}
+
+:root[data-theme="dark"] .worker-reviews {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .worker-details {
+  color: #c5d0d5;
+}
+
+:root[data-theme="dark"] .worker-detail-dot {
+  color: #71838c;
+}
+
+/* View profile button */
+:root[data-theme="dark"] .worker-view-button {
+  background: #ef5a20;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .worker-view-button:hover {
+  background: #d94a15;
+}
+
+/* Empty search result */
+:root[data-theme="dark"] .workers-empty {
+  background: #1d3039;
+  border-color: #536873;
+  color: #c5d0d5;
+}
+
+/* Footer */
+:root[data-theme="dark"] .workers-footer {
+  color: #aebbc1;
+}
+
+/* Smooth transitions */
+.worker-cards-page,
+.workers-header,
+.worker-card,
+.workers-search,
+.workers-select,
+.workers-icon-button,
+.workers-empty {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <header className="workers-header">
@@ -539,6 +691,15 @@ export default function WorkerProfileCards() {
         </div>
 
         <div className="workers-header-icons">
+          <button
+            className="workers-icon-button workers-theme-button"
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle colour theme"
+            title="Toggle light and dark mode"
+          >
+            {theme === "light" ? "☾" : "☀"}
+          </button>
           <button
             className="workers-icon-button"
             type="button"
@@ -581,9 +742,6 @@ export default function WorkerProfileCards() {
       </header>
 
       <main className="workers-content">
-        
-
-
         <section className="workers-grid" aria-label="Skilled worker profiles">
           {filteredWorkers.length > 0 ? (
             filteredWorkers.map((worker) => (
@@ -652,8 +810,6 @@ export default function WorkerProfileCards() {
             </div>
           )}
         </section>
-
-        
       </main>
     </div>
   );

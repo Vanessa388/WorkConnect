@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getAdminSession, adminLogin, adminLogout } from "../utils/auth";
+import { useTheme } from "../ThemeContext";
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
   /\/$/,
   "",
@@ -8,6 +9,7 @@ const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
 export default function AdminDashboard() {
 
   const [adminUser, setAdminUser] = useState(null);
+  const { theme, toggleTheme } = useTheme();
   const [authChecking, setAuthChecking] = useState(true);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -489,6 +491,14 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
   if (!adminUser) {
     return (
       <div className="admin-login-screen">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="admin-theme-toggle"
+          aria-label="Toggle theme"
+        >
+          {theme === "light" ? "☾" : "☀"}
+        </button>
         <style>{`
           .admin-login-screen {
             min-height: 100vh;
@@ -578,7 +588,63 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             border-radius: 8px;
             font-size: 13px;
             margin-bottom: 16px;
-          }
+          }.admin-theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 9px 13px;
+  border-radius: 8px;
+  border: 1px solid #d2d6dc;
+  background: #ffffff;
+  color: #101432;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.admin-login-screen {
+  position: relative;
+}
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .admin-login-screen {
+  background: linear-gradient(135deg, #0b151b 0%, #172832 100%) !important;
+}
+
+:root[data-theme="dark"] .admin-login-card {
+  background: #1d3039 !important;
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .admin-login-header h1,
+:root[data-theme="dark"] .admin-login-field label {
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .admin-login-header p {
+  color: #b7c4ca !important;
+}
+
+:root[data-theme="dark"] .admin-login-field input {
+  background: #263840 !important;
+  color: #ffffff !important;
+  border-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .admin-login-field input::placeholder {
+  color: #aebbc1 !important;
+}
+
+:root[data-theme="dark"] .admin-theme-toggle {
+  background: #263840 !important;
+  color: #ffffff !important;
+  border-color: #40545e !important;
+}
+
+
         `}</style>
         <div className="admin-login-card">
           <div className="admin-login-header">
@@ -1048,9 +1114,151 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             grid-template-columns: 1fr;
           }
         }
-      `}</style>
 
-      
+        /* THEME TOGGLE BUTTON */
+.admin-topbar .admin-theme-toggle {
+  position: static;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d2d6dc;
+  background: #f8fafc;
+  color: #101432;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* DARK MODE DASHBOARD */
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .admin-layout {
+  background: #101a20 !important;
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .admin-sidebar {
+  background: #a94118 !important;
+  border-color: #843512 !important;
+}
+
+:root[data-theme="dark"] .admin-nav-item.active {
+  background: #263840 !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .admin-sidebar-badge {
+  background: #263840 !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .admin-topbar,
+:root[data-theme="dark"] .admin-card,
+:root[data-theme="dark"] .stat-card,
+:root[data-theme="dark"] .modal-body {
+  background: #1d3039 !important;
+  color: #f1f5f7 !important;
+  border-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .admin-topbar {
+  border-bottom-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .admin-body {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .admin-topbar h1,
+:root[data-theme="dark"] .admin-card h2,
+:root[data-theme="dark"] .stat-val,
+:root[data-theme="dark"] .admin-card,
+:root[data-theme="dark"] .inspect-item,
+:root[data-theme="dark"] .modal-body {
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .stat-label,
+:root[data-theme="dark"] .admin-card p,
+:root[data-theme="dark"] .inspect-item strong {
+  color: #b7c4ca !important;
+}
+
+:root[data-theme="dark"] .admin-table th {
+  background: #263840 !important;
+  color: #e3e9ec !important;
+  border-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .admin-table td {
+  color: #e3e9ec !important;
+  border-color: #344750 !important;
+}
+
+:root[data-theme="dark"] .admin-search-input,
+:root[data-theme="dark"] .admin-card input,
+:root[data-theme="dark"] .admin-card textarea,
+:root[data-theme="dark"] .admin-card select {
+  background: #263840 !important;
+  color: #ffffff !important;
+  border-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .admin-search-input::placeholder {
+  color: #aebbc1 !important;
+}
+
+:root[data-theme="dark"] .subtab-btn {
+  background: #263840 !important;
+  color: #e3e9ec !important;
+  border-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .subtab-btn.active {
+  background: #c45120 !important;
+  color: #ffffff !important;
+  border-color: #c45120 !important;
+}
+
+:root[data-theme="dark"] .btn-close {
+  background: #344750 !important;
+  color: #ffffff !important;
+  border-color: #526873 !important;
+}
+
+:root[data-theme="dark"] .admin-mobile-toggle {
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .admin-topbar .admin-theme-toggle {
+  background: #263840 !important;
+  color: #ffffff !important;
+  border-color: #40545e !important;
+}
+
+:root[data-theme="dark"] .admin-card [style*="background: #f8fafc"],
+:root[data-theme="dark"] .modal-body [style*="background: #f8fafc"] {
+  background: #263840 !important;
+  color: #e3e9ec !important;
+}
+
+:root[data-theme="dark"] .modal-body h2,
+:root[data-theme="dark"] .modal-body p,
+:root[data-theme="dark"] .modal-body div {
+  border-color: #40545e;
+}
+
+.admin-layout,
+.admin-card,
+.stat-card,
+.admin-topbar,
+.modal-body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+
+      `}</style>
 
       <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="admin-sidebar-header">
@@ -1127,16 +1335,18 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
 
         <div className="admin-sidebar-footer">
           <div>
-            <div style={{ fontSize: "13px", fontWeight: "700" }}>Admin Portal</div>
-            <div style={{ fontSize: "11px", color: "#8a94a6" }}>{adminUser.email}</div>
+            <div style={{ fontSize: "13px", fontWeight: "700" }}>
+              Admin Portal
+            </div>
+            <div style={{ fontSize: "11px", color: "#8a94a6" }}>
+              {adminUser.email}
+            </div>
           </div>
           <button className="admin-footer-logout" onClick={handleAdminLogout}>
             Logout
           </button>
         </div>
       </aside>
-
-      
 
       <main className="admin-main">
         {/* Top Navbar */}
@@ -1159,18 +1369,41 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             </h1>
           </div>
 
-
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="admin-theme-toggle"
+            aria-label="Toggle theme"
+          >
+            {theme === "light" ? "☾" : "☀"}
+          </button>
         </header>
 
         {notice && (
-          <div style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", color: "#065f46", padding: "12px 20px", margin: "16px 30px 0", borderRadius: "8px", fontSize: "14px", display: "flex", justifyContent: "space-between" }}>
+          <div
+            style={{
+              background: "#ecfdf5",
+              border: "1px solid #6ee7b7",
+              color: "#065f46",
+              padding: "12px 20px",
+              margin: "16px 30px 0",
+              borderRadius: "8px",
+              fontSize: "14px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <span>{notice}</span>
-            <span style={{ cursor: "pointer", fontWeight: "bold" }} onClick={() => setNotice("")}>✕</span>
+            <span
+              style={{ cursor: "pointer", fontWeight: "bold" }}
+              onClick={() => setNotice("")}
+            >
+              ✕
+            </span>
           </div>
         )}
 
         <div className="admin-body">
-          
           {activeTab === "overview" && (
             <>
               <div className="stats-grid">
@@ -1206,25 +1439,47 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
 
                 <div className="stat-card">
                   <div className="stat-label">INCIDENT REPORTS</div>
-                  <div className="stat-val" style={{ color: pendingReportsList.length > 0 ? "#dc2626" : "#101432" }}>
+                  <div
+                    className="stat-val"
+                    style={{
+                      color:
+                        pendingReportsList.length > 0 ? "#dc2626" : "#101432",
+                    }}
+                  >
                     {pendingReportsList.length}
                   </div>
-                  <p className="stat-note" style={{ color: pendingReportsList.length > 0 ? "#dc2626" : "#64748b" }}>
+                  <p
+                    className="stat-note"
+                    style={{
+                      color:
+                        pendingReportsList.length > 0 ? "#dc2626" : "#64748b",
+                    }}
+                  >
                     {pendingReportsList.length} pending moderation
                   </p>
                 </div>
               </div>
 
-             
-
-
               {pendingReportsList.length > 0 && (
-                <div className="admin-card" style={{ borderLeft: "4px solid #dc2626", marginBottom: "20px" }}>
+                <div
+                  className="admin-card"
+                  style={{
+                    borderLeft: "4px solid #dc2626",
+                    marginBottom: "20px",
+                  }}
+                >
                   <div className="admin-card-head">
-                    <h2 style={{ color: "#dc2626", margin: 0 }}>🚨 Action Required: {pendingReportsList.length} Pending Incident Report(s)</h2>
+                    <h2 style={{ color: "#dc2626", margin: 0 }}>
+                      🚨 Action Required: {pendingReportsList.length} Pending
+                      Incident Report(s)
+                    </h2>
                     <button
                       className="subtab-btn"
-                      style={{ background: "#dc2626", color: "#fff", borderColor: "#dc2626" }}
+                      style={{
+                        background: "#dc2626",
+                        color: "#fff",
+                        borderColor: "#dc2626",
+                      }}
                       onClick={() => {
                         setActiveTab("reports");
                         setReportFilter("pending");
@@ -1233,18 +1488,30 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                       Review Reports Now →
                     </button>
                   </div>
-                  <p style={{ margin: "8px 0 0", color: "#666", fontSize: "14px" }}>
-                    Customers have filed complaints against artisans. Review the evidence and decide whether to resolve the dispute or ban the worker.
+                  <p
+                    style={{
+                      margin: "8px 0 0",
+                      color: "#666",
+                      fontSize: "14px",
+                    }}
+                  >
+                    Customers have filed complaints against artisans. Review the
+                    evidence and decide whether to resolve the dispute or ban
+                    the worker.
                   </p>
                 </div>
               )}
 
-             
-
               {pendingWorkersList.length > 0 && (
-                <div className="admin-card" style={{ borderLeft: "4px solid #f59e0b" }}>
+                <div
+                  className="admin-card"
+                  style={{ borderLeft: "4px solid #f59e0b" }}
+                >
                   <div className="admin-card-head">
-                    <h2>⚠️ Action Required: {pendingWorkersList.length} Pending Worker Approvals</h2>
+                    <h2>
+                      ⚠️ Action Required: {pendingWorkersList.length} Pending
+                      Worker Approvals
+                    </h2>
                     <button
                       className="subtab-btn"
                       onClick={() => {
@@ -1256,12 +1523,11 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                     </button>
                   </div>
                   <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
-                    The following artisans recently registered and are waiting for your verification before their profiles are made public.
+                    The following artisans recently registered and are waiting
+                    for your verification before their profiles are made public.
                   </p>
                 </div>
               )}
-
-              
 
               <div className="admin-card">
                 <div className="admin-card-head">
@@ -1286,11 +1552,23 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                       {workers.slice(0, 6).map((w) => (
                         <tr key={w.id}>
                           <td>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                              }}
+                            >
                               {w.image ? (
-                                <img src={w.image} alt={w.name} className="worker-avatar-small" />
+                                <img
+                                  src={w.image}
+                                  alt={w.name}
+                                  className="worker-avatar-small"
+                                />
                               ) : (
-                                <div className="worker-avatar-small">{w.name[0]}</div>
+                                <div className="worker-avatar-small">
+                                  {w.name[0]}
+                                </div>
                               )}
                               <strong>{w.name}</strong>
                             </div>
@@ -1299,11 +1577,29 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                           <td>{w.location}</td>
                           <td>
                             {w.verified ? (
-                              <span style={{ background: "#dcfce7", color: "#15803d", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#dcfce7",
+                                  color: "#15803d",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 ✓ Approved
                               </span>
                             ) : (
-                              <span style={{ background: "#fef3c7", color: "#b45309", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#fef3c7",
+                                  color: "#b45309",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 ⏳ Pending
                               </span>
                             )}
@@ -1325,8 +1621,6 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             </>
           )}
 
-          
-
           {activeTab === "workers" && (
             <div className="admin-card">
               <div className="admin-card-head">
@@ -1339,8 +1633,6 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                   onChange={(e) => setWorkerSearch(e.target.value)}
                 />
               </div>
-
-            
 
               <div className="subtabs-bar">
                 <button
@@ -1382,9 +1674,15 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                         <tr key={w.id}>
                           <td>
                             {w.image ? (
-                              <img src={w.image} alt={w.name} className="worker-avatar-small" />
+                              <img
+                                src={w.image}
+                                alt={w.name}
+                                className="worker-avatar-small"
+                              />
                             ) : (
-                              <div className="worker-avatar-small">{w.name[0]}</div>
+                              <div className="worker-avatar-small">
+                                {w.name[0]}
+                              </div>
                             )}
                           </td>
                           <td>
@@ -1395,21 +1693,54 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                           <td>{w.phone || "—"}</td>
                           <td>
                             {w.banned ? (
-                              <span style={{ background: "#fee2e2", color: "#b91c1c", padding: "4px 9px", borderRadius: "12px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#fee2e2",
+                                  color: "#b91c1c",
+                                  padding: "4px 9px",
+                                  borderRadius: "12px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 🚫 Banned
                               </span>
                             ) : w.verified ? (
-                              <span style={{ background: "#dcfce7", color: "#15803d", padding: "4px 9px", borderRadius: "12px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#dcfce7",
+                                  color: "#15803d",
+                                  padding: "4px 9px",
+                                  borderRadius: "12px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 ✓ Public
                               </span>
                             ) : (
-                              <span style={{ background: "#fef3c7", color: "#b45309", padding: "4px 9px", borderRadius: "12px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#fef3c7",
+                                  color: "#b45309",
+                                  padding: "4px 9px",
+                                  borderRadius: "12px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 ⏳ Pending Approval
                               </span>
                             )}
                           </td>
                           <td>
-                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "6px",
+                              }}
+                            >
                               <button
                                 className="inspect-btn"
                                 onClick={() => setInspectWorker(w)}
@@ -1420,7 +1751,16 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                                 <button
                                   type="button"
                                   onClick={() => handleToggleBan(w.id, false)}
-                                  style={{ padding: "6px 10px", background: "#ecfdf5", color: "#15803d", border: "1px solid #86efac", borderRadius: "6px", fontSize: "12px", cursor: "pointer", fontWeight: "700" }}
+                                  style={{
+                                    padding: "6px 10px",
+                                    background: "#ecfdf5",
+                                    color: "#15803d",
+                                    border: "1px solid #86efac",
+                                    borderRadius: "6px",
+                                    fontSize: "12px",
+                                    cursor: "pointer",
+                                    fontWeight: "700",
+                                  }}
                                   title="Lift ban on worker"
                                 >
                                   ✅ Unban
@@ -1429,11 +1769,24 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    if (window.confirm(`Are you sure you want to BAN ${w.name}? They will be immediately removed from the AI Chatbot.`)) {
+                                    if (
+                                      window.confirm(
+                                        `Are you sure you want to BAN ${w.name}? They will be immediately removed from the AI Chatbot.`,
+                                      )
+                                    ) {
                                       handleToggleBan(w.id, true);
                                     }
                                   }}
-                                  style={{ padding: "6px 10px", background: "#fef2f2", color: "#dc2626", border: "1px solid #fca5a5", borderRadius: "6px", fontSize: "12px", cursor: "pointer", fontWeight: "700" }}
+                                  style={{
+                                    padding: "6px 10px",
+                                    background: "#fef2f2",
+                                    color: "#dc2626",
+                                    border: "1px solid #fca5a5",
+                                    borderRadius: "6px",
+                                    fontSize: "12px",
+                                    cursor: "pointer",
+                                    fontWeight: "700",
+                                  }}
                                   title="Ban worker and delist from Chatbot"
                                 >
                                   🚫 Ban
@@ -1445,7 +1798,14 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="7" style={{ textAlign: "center", padding: "30px", color: "#888" }}>
+                        <td
+                          colSpan="7"
+                          style={{
+                            textAlign: "center",
+                            padding: "30px",
+                            color: "#888",
+                          }}
+                        >
                           No workers found in this tab.
                         </td>
                       </tr>
@@ -1455,8 +1815,6 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
               </div>
             </div>
           )}
-
-          
 
           {activeTab === "customers" && (
             <div className="admin-card">
@@ -1487,23 +1845,43 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                       displayedCustomers.map((c) => (
                         <tr key={c.id}>
                           <td>
-                            <strong>{c.full_name || c.name || "Customer"}</strong>
+                            <strong>
+                              {c.full_name || c.name || "Customer"}
+                            </strong>
                           </td>
                           <td>{c.email}</td>
                           <td>{c.phone || "Not provided"}</td>
                           <td>
-                            <span style={{ background: "#e0e7ff", color: "#3730a3", padding: "3px 8px", borderRadius: "8px", fontSize: "12px", fontWeight: "700" }}>
+                            <span
+                              style={{
+                                background: "#e0e7ff",
+                                color: "#3730a3",
+                                padding: "3px 8px",
+                                borderRadius: "8px",
+                                fontSize: "12px",
+                                fontWeight: "700",
+                              }}
+                            >
                               {c.role || "customer"}
                             </span>
                           </td>
                           <td style={{ color: "#64748b" }}>
-                            {c.created_at ? new Date(c.created_at).toLocaleDateString() : "Recent"}
+                            {c.created_at
+                              ? new Date(c.created_at).toLocaleDateString()
+                              : "Recent"}
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="5" style={{ textAlign: "center", padding: "30px", color: "#888" }}>
+                        <td
+                          colSpan="5"
+                          style={{
+                            textAlign: "center",
+                            padding: "30px",
+                            color: "#888",
+                          }}
+                        >
                           No registered customers found.
                         </td>
                       </tr>
@@ -1514,18 +1892,28 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             </div>
           )}
 
-         
-
-
           {activeTab === "reports" && (
             <div className="admin-card">
               <div className="admin-card-head">
                 <div>
-                  <h2 style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <h2
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     <span>🚨</span> Customer Incident Reports ({reports.length})
                   </h2>
-                  <p style={{ margin: "4px 0 0", color: "#666", fontSize: "13px" }}>
-                    Review customer reports against artisans, reach out to resolve disputes, or enforce disciplinary bans.
+                  <p
+                    style={{
+                      margin: "4px 0 0",
+                      color: "#666",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Review customer reports against artisans, reach out to
+                    resolve disputes, or enforce disciplinary bans.
                   </p>
                 </div>
 
@@ -1569,49 +1957,111 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                       displayedReports.map((r) => (
                         <tr key={r.id}>
                           <td>
-                            <strong>{r.worker?.name || `Artisan #${r.worker_id}`}</strong>
+                            <strong>
+                              {r.worker?.name || `Artisan #${r.worker_id}`}
+                            </strong>
                             <div style={{ fontSize: "12px", color: "#666" }}>
                               {r.worker?.skill || "Trade"} · ID #{r.worker_id}
                             </div>
                           </td>
                           <td>
-                            <span style={{ background: "#fee2e2", color: "#991b1b", padding: "4px 8px", borderRadius: "6px", fontSize: "12px", fontWeight: "700" }}>
+                            <span
+                              style={{
+                                background: "#fee2e2",
+                                color: "#991b1b",
+                                padding: "4px 8px",
+                                borderRadius: "6px",
+                                fontSize: "12px",
+                                fontWeight: "700",
+                              }}
+                            >
                               {r.reason}
                             </span>
                           </td>
                           <td>
-                            <div><strong>{r.reporter_name}</strong></div>
+                            <div>
+                              <strong>{r.reporter_name}</strong>
+                            </div>
                             <div style={{ fontSize: "12px", color: "#666" }}>
-                              {r.reporter_phone || r.reporter_email || "No contact"}
+                              {r.reporter_phone ||
+                                r.reporter_email ||
+                                "No contact"}
                             </div>
                           </td>
                           <td style={{ color: "#64748b", fontSize: "13px" }}>
-                            {r.created_at ? new Date(r.created_at).toLocaleDateString() : "Recent"}
+                            {r.created_at
+                              ? new Date(r.created_at).toLocaleDateString()
+                              : "Recent"}
                           </td>
                           <td>
                             {r.status === "pending" && (
-                              <span style={{ background: "#fef3c7", color: "#b45309", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#fef3c7",
+                                  color: "#b45309",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 ⏳ Pending
                               </span>
                             )}
                             {r.status === "resolved" && (
-                              <span style={{ background: "#dcfce7", color: "#15803d", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#dcfce7",
+                                  color: "#15803d",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 ✓ Resolved
                               </span>
                             )}
                             {r.status === "dismissed" && (
-                              <span style={{ background: "#f1f5f9", color: "#475569", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#f1f5f9",
+                                  color: "#475569",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 Dismissed
                               </span>
                             )}
                           </td>
                           <td>
                             {r.worker?.banned ? (
-                              <span style={{ background: "#fee2e2", color: "#b91c1c", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#fee2e2",
+                                  color: "#b91c1c",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 🚫 Banned
                               </span>
                             ) : (
-                              <span style={{ background: "#ecfdf5", color: "#065f46", padding: "3px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                              <span
+                                style={{
+                                  background: "#ecfdf5",
+                                  color: "#065f46",
+                                  padding: "3px 8px",
+                                  borderRadius: "10px",
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                }}
+                              >
                                 Active
                               </span>
                             )}
@@ -1620,7 +2070,11 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                             <button
                               className="inspect-btn"
                               onClick={() => setInspectReport(r)}
-                              style={{ background: "#dc2626", color: "#fff", borderColor: "#dc2626" }}
+                              style={{
+                                background: "#dc2626",
+                                color: "#fff",
+                                borderColor: "#dc2626",
+                              }}
                             >
                               🔍 Review & Take Action
                             </button>
@@ -1629,7 +2083,14 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="7" style={{ textAlign: "center", padding: "30px", color: "#888" }}>
+                        <td
+                          colSpan="7"
+                          style={{
+                            textAlign: "center",
+                            padding: "30px",
+                            color: "#888",
+                          }}
+                        >
                           No customer incident reports in this section.
                         </td>
                       </tr>
@@ -1640,40 +2101,102 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             </div>
           )}
 
-          
-
           {activeTab === "add-worker" && (
             <div className="admin-card" style={{ maxWidth: "800px" }}>
               <div className="admin-card-head">
                 <h2>Register & Onboard Artisan Manually</h2>
               </div>
-              <p style={{ color: "#666", fontSize: "14px", marginTop: "-10px", marginBottom: "20px" }}>
-                Workers added through the admin panel will be verified immediately and published to the Chatbot.
+              <p
+                style={{
+                  color: "#666",
+                  fontSize: "14px",
+                  marginTop: "-10px",
+                  marginBottom: "20px",
+                }}
+              >
+                Workers added through the admin panel will be verified
+                immediately and published to the Chatbot.
               </p>
 
               {addError && (
-                <div style={{ background: "#fef3f2", color: "#b42318", padding: "10px 14px", borderRadius: "8px", marginBottom: "16px", fontSize: "14px" }}>
+                <div
+                  style={{
+                    background: "#fef3f2",
+                    color: "#b42318",
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    marginBottom: "16px",
+                    fontSize: "14px",
+                  }}
+                >
                   {addError}
                 </div>
               )}
               {addSuccess && (
-                <div style={{ background: "#ecfdf5", color: "#065f46", padding: "10px 14px", borderRadius: "8px", marginBottom: "16px", fontSize: "14px" }}>
+                <div
+                  style={{
+                    background: "#ecfdf5",
+                    color: "#065f46",
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    marginBottom: "16px",
+                    fontSize: "14px",
+                  }}
+                >
                   {addSuccess}
                 </div>
               )}
 
               <form onSubmit={handleAddWorkerSubmit}>
                 {/* Profile Photo */}
-                <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "20px", padding: "12px", background: "#f8fafc", borderRadius: "10px" }}>
-                  <div style={{ width: "70px", height: "70px", borderRadius: "50%", background: "#f4510b", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", fontSize: "28px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
+                    marginBottom: "20px",
+                    padding: "12px",
+                    background: "#f8fafc",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      borderRadius: "50%",
+                      background: "#f4510b",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                      fontSize: "28px",
+                    }}
+                  >
                     {addProfilePhoto ? (
-                      <img src={URL.createObjectURL(addProfilePhoto)} alt="Avatar preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <img
+                        src={URL.createObjectURL(addProfilePhoto)}
+                        alt="Avatar preview"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
                     ) : (
                       "👤"
                     )}
                   </div>
                   <div>
-                    <label style={{ display: "block", fontWeight: "700", fontSize: "14px", marginBottom: "4px" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        fontWeight: "700",
+                        fontSize: "14px",
+                        marginBottom: "4px",
+                      }}
+                    >
                       Artisan Profile Photo
                     </label>
                     <input
@@ -1684,27 +2207,56 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px",
+                    marginBottom: "16px",
+                  }}
+                >
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Full Name</label>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      Full Name
+                    </label>
                     <input
                       type="text"
                       className="admin-search-input"
                       style={{ width: "100%" }}
                       placeholder="e.g. Samuel Okafor"
                       value={addForm.fullName}
-                      onChange={(e) => setAddForm({ ...addForm, fullName: e.target.value })}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, fullName: e.target.value })
+                      }
                       required
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Trade / Skill</label>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      Trade / Skill
+                    </label>
                     <select
                       className="admin-search-input"
                       style={{ width: "100%" }}
                       value={addForm.skill}
-                      onChange={(e) => setAddForm({ ...addForm, skill: e.target.value })}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, skill: e.target.value })
+                      }
                     >
                       <option value="Electrician">Electrician</option>
                       <option value="Plumber">Plumber</option>
@@ -1720,36 +2272,73 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px",
+                    marginBottom: "16px",
+                  }}
+                >
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Location</label>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      Location
+                    </label>
                     <input
                       type="text"
                       className="admin-search-input"
                       style={{ width: "100%" }}
                       placeholder="e.g. Nsukka, Enugu"
                       value={addForm.location}
-                      onChange={(e) => setAddForm({ ...addForm, location: e.target.value })}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, location: e.target.value })
+                      }
                       required
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Phone Number</label>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      Phone Number
+                    </label>
                     <input
                       type="tel"
                       className="admin-search-input"
                       style={{ width: "100%" }}
                       placeholder="+234 800 000 0000"
                       value={addForm.phone}
-                      onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, phone: e.target.value })
+                      }
                     />
                   </div>
                 </div>
 
                 <div style={{ marginBottom: "16px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
-                    Email Address (Optional — used to send verification approval alert)
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Email Address (Optional — used to send verification approval
+                    alert)
                   </label>
                   <input
                     type="email"
@@ -1757,62 +2346,127 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                     style={{ width: "100%" }}
                     placeholder="artisan@gmail.com"
                     value={addForm.email}
-                    onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, email: e.target.value })
+                    }
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px",
+                    marginBottom: "16px",
+                  }}
+                >
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Years of Experience</label>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      Years of Experience
+                    </label>
                     <input
                       type="text"
                       className="admin-search-input"
                       style={{ width: "100%" }}
                       placeholder="e.g. 4+ years"
                       value={addForm.experience}
-                      onChange={(e) => setAddForm({ ...addForm, experience: e.target.value })}
+                      onChange={(e) =>
+                        setAddForm({ ...addForm, experience: e.target.value })
+                      }
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Working Hours</label>
+                    <label
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "700",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      Working Hours
+                    </label>
                     <input
                       type="text"
                       className="admin-search-input"
                       style={{ width: "100%" }}
                       placeholder="08:00 - 18:00"
                       value={addForm.working_hours}
-                      onChange={(e) => setAddForm({ ...addForm, working_hours: e.target.value })}
+                      onChange={(e) =>
+                        setAddForm({
+                          ...addForm,
+                          working_hours: e.target.value,
+                        })
+                      }
                     />
                   </div>
                 </div>
 
                 <div style={{ marginBottom: "16px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>About / Services Overview</label>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    About / Services Overview
+                  </label>
                   <textarea
                     rows="3"
                     className="admin-search-input"
                     style={{ width: "100%", resize: "vertical" }}
                     placeholder="Brief description of the artisan's expertise and specialties..."
                     value={addForm.about}
-                    onChange={(e) => setAddForm({ ...addForm, about: e.target.value })}
+                    onChange={(e) =>
+                      setAddForm({ ...addForm, about: e.target.value })
+                    }
                   />
                 </div>
 
                 <div style={{ marginBottom: "20px" }}>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>Portfolio Work Proof Photos (Up to 4)</label>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    Portfolio Work Proof Photos (Up to 4)
+                  </label>
                   <input
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={(e) => setAddPortfolioPhotos(Array.from(e.target.files || []))}
+                    onChange={(e) =>
+                      setAddPortfolioPhotos(Array.from(e.target.files || []))
+                    }
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={addLoading}
-                  style={{ padding: "13px 28px", background: "#f4510b", color: "#fff", border: "none", borderRadius: "8px", fontWeight: "700", fontSize: "15px", cursor: "pointer" }}
+                  style={{
+                    padding: "13px 28px",
+                    background: "#f4510b",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontWeight: "700",
+                    fontSize: "15px",
+                    cursor: "pointer",
+                  }}
                 >
                   {addLoading ? "Saving …" : "Add & Verify Worker"}
                 </button>
@@ -1822,14 +2476,25 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
         </div>
       </main>
 
-     
-
-     
       {inspectReport && (
         <div className="modal-overlay" onClick={() => setInspectReport(null)}>
-          <div className="modal-body" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "680px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #e2e8f0", paddingBottom: "14px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div
+            className="modal-body"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: "680px" }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #e2e8f0",
+                paddingBottom: "14px",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <span style={{ fontSize: "24px" }}>🚨</span>
                 <h2 style={{ margin: 0, fontSize: "20px", color: "#101432" }}>
                   Incident Report #{inspectReport.id}
@@ -1846,21 +2511,68 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             </div>
 
             {/* Complaint details box */}
-            <div style={{ background: "#fff5f5", border: "1px solid #fed7d7", borderRadius: "10px", padding: "16px", marginTop: "16px" }}>
-              <div style={{ fontSize: "12px", fontWeight: "800", color: "#c53030", textTransform: "uppercase", marginBottom: "4px" }}>
+            <div
+              style={{
+                background: "#fff5f5",
+                border: "1px solid #fed7d7",
+                borderRadius: "10px",
+                padding: "16px",
+                marginTop: "16px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "800",
+                  color: "#c53030",
+                  textTransform: "uppercase",
+                  marginBottom: "4px",
+                }}
+              >
                 Reported Reason: {inspectReport.reason}
               </div>
-              <p style={{ margin: 0, fontSize: "14px", color: "#2d3748", lineHeight: "1.5" }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "14px",
+                  color: "#2d3748",
+                  lineHeight: "1.5",
+                }}
+              >
                 "{inspectReport.details}"
               </p>
-              <div style={{ marginTop: "10px", fontSize: "12px", color: "#718096" }}>
-                Filed on: {inspectReport.created_at ? new Date(inspectReport.created_at).toLocaleString() : "Recently"}
+              <div
+                style={{
+                  marginTop: "10px",
+                  fontSize: "12px",
+                  color: "#718096",
+                }}
+              >
+                Filed on:{" "}
+                {inspectReport.created_at
+                  ? new Date(inspectReport.created_at).toLocaleString()
+                  : "Recently"}
               </div>
             </div>
 
             {/* Reporter Contact Info */}
-            <div style={{ marginTop: "16px", padding: "14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <div style={{ fontSize: "13px", fontWeight: "800", color: "#334155", marginBottom: "8px" }}>
+            <div
+              style={{
+                marginTop: "16px",
+                padding: "14px",
+                background: "#f8fafc",
+                borderRadius: "10px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "800",
+                  color: "#334155",
+                  marginBottom: "8px",
+                }}
+              >
                 👤 Complainant (Customer Details)
               </div>
               <div className="inspect-grid" style={{ margin: 0 }}>
@@ -1871,47 +2583,105 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                 <div className="inspect-item">
                   <strong>Phone Number:</strong>
                   {inspectReport.reporter_phone ? (
-                    <a href={`tel:${inspectReport.reporter_phone}`} style={{ color: "#ef5a20", fontWeight: "bold" }}>
+                    <a
+                      href={`tel:${inspectReport.reporter_phone}`}
+                      style={{ color: "#ef5a20", fontWeight: "bold" }}
+                    >
                       📞 {inspectReport.reporter_phone}
                     </a>
-                  ) : <span>Not provided</span>}
+                  ) : (
+                    <span>Not provided</span>
+                  )}
                 </div>
                 <div className="inspect-item">
                   <strong>Email:</strong>
                   {inspectReport.reporter_email ? (
-                    <a href={`mailto:${inspectReport.reporter_email}`} style={{ color: "#2563eb" }}>
+                    <a
+                      href={`mailto:${inspectReport.reporter_email}`}
+                      style={{ color: "#2563eb" }}
+                    >
                       ✉️ {inspectReport.reporter_email}
                     </a>
-                  ) : <span>Not provided</span>}
+                  ) : (
+                    <span>Not provided</span>
+                  )}
                 </div>
                 <div className="inspect-item">
                   <strong>Report Status:</strong>
-                  <span style={{ textTransform: "capitalize", fontWeight: "bold" }}>{inspectReport.status}</span>
+                  <span
+                    style={{ textTransform: "capitalize", fontWeight: "bold" }}
+                  >
+                    {inspectReport.status}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Artisan Profile Details */}
-            <div style={{ marginTop: "16px", padding: "14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-              <div style={{ fontSize: "13px", fontWeight: "800", color: "#334155", marginBottom: "8px" }}>
+            <div
+              style={{
+                marginTop: "16px",
+                padding: "14px",
+                background: "#f8fafc",
+                borderRadius: "10px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "800",
+                  color: "#334155",
+                  marginBottom: "8px",
+                }}
+              >
                 ⚒️ Reported Artisan Details
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  marginBottom: "12px",
+                }}
+              >
                 {inspectReport.worker?.image ? (
                   <img
                     src={inspectReport.worker.image}
                     alt={inspectReport.worker.name}
-                    style={{ width: "46px", height: "46px", borderRadius: "50%", objectFit: "cover", border: "1.5px solid #f4510b" }}
+                    style={{
+                      width: "46px",
+                      height: "46px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      border: "1.5px solid #f4510b",
+                    }}
                   />
                 ) : (
-                  <div style={{ width: "46px", height: "46px", borderRadius: "50%", background: "#f4510b", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold" }}>
+                  <div
+                    style={{
+                      width: "46px",
+                      height: "46px",
+                      borderRadius: "50%",
+                      background: "#f4510b",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: "bold",
+                    }}
+                  >
                     {(inspectReport.worker?.name || "W")[0]}
                   </div>
                 )}
                 <div>
-                  <div style={{ fontWeight: "800", fontSize: "15px" }}>{inspectReport.worker?.name || "Artisan"}</div>
+                  <div style={{ fontWeight: "800", fontSize: "15px" }}>
+                    {inspectReport.worker?.name || "Artisan"}
+                  </div>
                   <div style={{ fontSize: "13px", color: "#666" }}>
-                    {inspectReport.worker?.skill} · {inspectReport.worker?.location || "Location not specified"} · ID #{inspectReport.worker_id}
+                    {inspectReport.worker?.skill} ·{" "}
+                    {inspectReport.worker?.location || "Location not specified"}{" "}
+                    · ID #{inspectReport.worker_id}
                   </div>
                 </div>
               </div>
@@ -1920,35 +2690,66 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                 <div className="inspect-item">
                   <strong>Artisan Phone:</strong>
                   {inspectReport.worker?.phone ? (
-                    <a href={`tel:${inspectReport.worker.phone}`} style={{ color: "#ef5a20", fontWeight: "bold" }}>
+                    <a
+                      href={`tel:${inspectReport.worker.phone}`}
+                      style={{ color: "#ef5a20", fontWeight: "bold" }}
+                    >
                       📞 {inspectReport.worker.phone}
                     </a>
-                  ) : <span>Not listed</span>}
+                  ) : (
+                    <span>Not listed</span>
+                  )}
                 </div>
                 <div className="inspect-item">
                   <strong>Current Standing:</strong>
                   {inspectReport.worker?.banned ? (
-                    <span style={{ color: "#dc2626", fontWeight: "bold" }}>🚫 Currently Banned</span>
+                    <span style={{ color: "#dc2626", fontWeight: "bold" }}>
+                      🚫 Currently Banned
+                    </span>
                   ) : (
-                    <span style={{ color: "#16a34a", fontWeight: "bold" }}>✓ Active</span>
+                    <span style={{ color: "#16a34a", fontWeight: "bold" }}>
+                      ✓ Active
+                    </span>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Moderation Actions */}
-            <div style={{ marginTop: "22px", borderTop: "1px solid #e2e8f0", paddingTop: "16px" }}>
-              <div style={{ fontSize: "13px", fontWeight: "800", color: "#101432", marginBottom: "12px" }}>
+            <div
+              style={{
+                marginTop: "22px",
+                borderTop: "1px solid #e2e8f0",
+                paddingTop: "16px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "800",
+                  color: "#101432",
+                  marginBottom: "12px",
+                }}
+              >
                 Admin Action:
               </div>
 
-              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                  justifyContent: "flex-end",
+                }}
+              >
                 {inspectReport.worker?.banned ? (
                   <button
                     type="button"
                     className="btn-approve"
                     disabled={reportActionLoading}
-                    onClick={() => handleToggleBan(inspectReport.worker_id, false)}
+                    onClick={() =>
+                      handleToggleBan(inspectReport.worker_id, false)
+                    }
                   >
                     ✅ Lift Ban (Restore Worker)
                   </button>
@@ -1958,7 +2759,11 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                     className="btn-reject"
                     disabled={reportActionLoading}
                     onClick={() => {
-                      if (window.confirm(`Are you sure you want to BAN ${inspectReport.worker?.name || 'this worker'}? They will be immediately removed from the AI Chatbot search.`)) {
+                      if (
+                        window.confirm(
+                          `Are you sure you want to BAN ${inspectReport.worker?.name || "this worker"}? They will be immediately removed from the AI Chatbot search.`,
+                        )
+                      ) {
                         handleToggleBan(inspectReport.worker_id, true);
                       }
                     }}
@@ -1973,7 +2778,13 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                     className="btn-approve"
                     style={{ background: "#2563eb" }}
                     disabled={reportActionLoading}
-                    onClick={() => handleUpdateReport(inspectReport.id, "resolved", "Resolved by admin after mediation.")}
+                    onClick={() =>
+                      handleUpdateReport(
+                        inspectReport.id,
+                        "resolved",
+                        "Resolved by admin after mediation.",
+                      )
+                    }
                   >
                     ✓ Mark as Resolved
                   </button>
@@ -1984,7 +2795,13 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                     type="button"
                     className="btn-close"
                     disabled={reportActionLoading}
-                    onClick={() => handleUpdateReport(inspectReport.id, "dismissed", "Dismissed after investigation.")}
+                    onClick={() =>
+                      handleUpdateReport(
+                        inspectReport.id,
+                        "dismissed",
+                        "Dismissed after investigation.",
+                      )
+                    }
                   >
                     Dismiss Report
                   </button>
@@ -2007,30 +2824,75 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
       {inspectWorker && (
         <div className="modal-overlay">
           <div className="modal-body">
-            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                marginBottom: "16px",
+              }}
+            >
               {inspectWorker.image ? (
                 <img
                   src={inspectWorker.image}
                   alt={inspectWorker.name}
-                  style={{ width: "70px", height: "70px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f4510b" }}
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2px solid #f4510b",
+                  }}
                 />
               ) : (
-                <div style={{ width: "70px", height: "70px", borderRadius: "50%", background: "#f4510b", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px" }}>
+                <div
+                  style={{
+                    width: "70px",
+                    height: "70px",
+                    borderRadius: "50%",
+                    background: "#f4510b",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "28px",
+                  }}
+                >
                   {inspectWorker.name[0]}
                 </div>
               )}
               <div>
-                <h2 style={{ margin: "0 0 4px", fontSize: "22px" }}>{inspectWorker.name}</h2>
+                <h2 style={{ margin: "0 0 4px", fontSize: "22px" }}>
+                  {inspectWorker.name}
+                </h2>
                 <div style={{ color: "#64748b", fontSize: "14px" }}>
                   {inspectWorker.skill} · {inspectWorker.location}
                 </div>
                 <div style={{ marginTop: "4px" }}>
                   {inspectWorker.verified ? (
-                    <span style={{ background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                    <span
+                      style={{
+                        background: "#dcfce7",
+                        color: "#15803d",
+                        padding: "2px 8px",
+                        borderRadius: "10px",
+                        fontSize: "11px",
+                        fontWeight: "700",
+                      }}
+                    >
                       ✓ Currently Public
                     </span>
                   ) : (
-                    <span style={{ background: "#fef3c7", color: "#b45309", padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: "700" }}>
+                    <span
+                      style={{
+                        background: "#fef3c7",
+                        color: "#b45309",
+                        padding: "2px 8px",
+                        borderRadius: "10px",
+                        fontSize: "11px",
+                        fontWeight: "700",
+                      }}
+                    >
                       ⏳ Pending Approval
                     </span>
                   )}
@@ -2058,20 +2920,45 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
             </div>
 
             <div style={{ marginTop: "14px" }}>
-              <strong style={{ display: "block", color: "#64748b", fontSize: "12px", marginBottom: "4px" }}>
+              <strong
+                style={{
+                  display: "block",
+                  color: "#64748b",
+                  fontSize: "12px",
+                  marginBottom: "4px",
+                }}
+              >
                 Artisan Bio / Description:
               </strong>
-              <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5", color: "#334155", background: "#f8fafc", padding: "12px", borderRadius: "8px" }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "14px",
+                  lineHeight: "1.5",
+                  color: "#334155",
+                  background: "#f8fafc",
+                  padding: "12px",
+                  borderRadius: "8px",
+                }}
+              >
                 {inspectWorker.about || "No bio submitted."}
               </p>
             </div>
 
             {/* Portfolio Proof Photos */}
             <div style={{ marginTop: "16px" }}>
-              <strong style={{ display: "block", color: "#64748b", fontSize: "12px", marginBottom: "6px" }}>
+              <strong
+                style={{
+                  display: "block",
+                  color: "#64748b",
+                  fontSize: "12px",
+                  marginBottom: "6px",
+                }}
+              >
                 Submitted Work Proof Photos:
               </strong>
-              {Array.isArray(inspectWorker.portfolio) && inspectWorker.portfolio.length > 0 ? (
+              {Array.isArray(inspectWorker.portfolio) &&
+              inspectWorker.portfolio.length > 0 ? (
                 <div className="inspect-portfolio">
                   {inspectWorker.portfolio.map((imgUrl, i) => (
                     <img
@@ -2083,7 +2970,14 @@ if (reportsData.success && Array.isArray(reportsData.reports)) {
                   ))}
                 </div>
               ) : (
-                <p style={{ fontSize: "13px", color: "#888", fontStyle: "italic", margin: 0 }}>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#888",
+                    fontStyle: "italic",
+                    margin: 0,
+                  }}
+                >
                   No portfolio photos uploaded by this worker.
                 </p>
               )}

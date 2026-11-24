@@ -530,6 +530,104 @@ export default function AboutPage() {
             padding: 18px;
           }
         }
+
+        :root[data-theme="dark"] .about-page {
+  background: #101a20;
+  color: #f1f5f7;
+}
+
+/* Header */
+:root[data-theme="dark"] .about-header {
+  background: #17262e;
+  border-bottom-color: #34464e;
+}
+
+:root[data-theme="dark"] .brand,
+:root[data-theme="dark"] .about-logo .work {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .about-menu-toggle {
+  color: #f1f5f7;
+}
+
+/* Main background */
+:root[data-theme="dark"] .about-main {
+  background:
+    radial-gradient(
+      ellipse at top left,
+      #263943 0%,
+      transparent 55%
+    ),
+    #101a20;
+}
+
+/* Story section */
+:root[data-theme="dark"] .about-story-text h1,
+:root[data-theme="dark"] .about-trust {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .about-story-text > p {
+  color: #c5d0d5;
+}
+
+/* Information cards */
+:root[data-theme="dark"] .about-info-card,
+:root[data-theme="dark"] .about-value-card {
+  background: #1d3039;
+  border-color: #344952;
+  box-shadow: 0 7px 22px rgba(0, 0, 0, 0.18);
+}
+
+:root[data-theme="dark"] .about-card-title {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .about-card-subtitle {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .about-info-card p,
+:root[data-theme="dark"] .about-value-card > p,
+:root[data-theme="dark"] .about-promise-list li {
+  color: #c5d0d5;
+}
+
+/* Mission, vision and promise */
+:root[data-theme="dark"] .about-value-card h3 {
+  color: #ff9665;
+}
+
+/* Keep orange highlights */
+:root[data-theme="dark"] .about-story-text h2,
+:root[data-theme="dark"] .about-logo .connect,
+:root[data-theme="dark"] .about-card-icon,
+:root[data-theme="dark"] .about-value-icon {
+  color: #ff9665;
+}
+
+/* Footer */
+:root[data-theme="dark"] .about-footer {
+  background: #0b1419;
+  color: #ffffff;
+}
+
+/* Smooth transition */
+.about-page,
+.about-header,
+.about-main,
+.about-info-card,
+.about-value-card,
+.about-footer {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <div className="about-page">

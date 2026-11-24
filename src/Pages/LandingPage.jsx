@@ -1378,6 +1378,154 @@ export default function LandingPage() {
             height: 195px;
           }
         }
+
+/* ============================= */
+/* WORKCONNECT LANDING DARK MODE */
+/* ============================= */
+
+:root[data-theme="dark"] body {
+  background: #101a20;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .page-container,
+:root[data-theme="dark"] .main-container {
+  background: #101a20;
+  color: #f1f5f7;
+}
+
+/* Hero section */
+
+:root[data-theme="dark"] .hero-section {
+  background: #101a20;
+}
+
+:root[data-theme="dark"] .hero-title,
+:root[data-theme="dark"] .hero-description,
+:root[data-theme="dark"] .benefit-item {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .search-input-wrapper {
+  background: #263840;
+  border-color: #40545e;
+}
+
+:root[data-theme="dark"] .search-input-wrapper input {
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .search-icon {
+  color: #d1dce1;
+}
+
+:root[data-theme="dark"] .search-input-wrapper input::placeholder {
+  color: #aebbc1;
+}
+
+/* Payment notice */
+
+:root[data-theme="dark"] .payment-notice {
+  background: #493323;
+  color: #ffe5ce;
+}
+
+:root[data-theme="dark"] .notice-icon {
+  color: #ffb27d;
+}
+
+/* Popular services */
+
+:root[data-theme="dark"] .categories-section {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .category-card {
+  background: #1d3039;
+  color: #f1f5f7;
+  border-color: #344952;
+}
+
+:root[data-theme="dark"] .category-card:hover {
+  background: #293f49;
+  border-color: #f5682b;
+}
+
+:root[data-theme="dark"] .category-card.category-active {
+  background: #493323;
+  border-color: #f5682b;
+}
+
+/* How it works and Why choose us */
+
+:root[data-theme="dark"] .numbered-section {
+  border-bottom-color: #34464e;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .section-title,
+:root[data-theme="dark"] .numbered-content h3 {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .numbered-content p {
+  color: #c5d0d5;
+}
+
+/* FAQ */
+
+:root[data-theme="dark"] .faq-section {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .faq-item {
+  border-bottom-color: #34464e;
+}
+
+:root[data-theme="dark"] .faq-question {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .faq-answer {
+  color: #c5d0d5;
+}
+
+/* Page notification */
+
+:root[data-theme="dark"] .page-notice {
+  background: #493323;
+  border-color: #80502e;
+  color: #ffe5ce;
+}
+
+/* Footer */
+
+:root[data-theme="dark"] .footer {
+  background: #0b1419;
+  color: #ffffff;
+}
+
+/* Smooth theme transition */
+
+body,
+.page-container,
+.main-container,
+.hero-section,
+.categories-section,
+.category-card,
+.numbered-section,
+.faq-section,
+.faq-item,
+.payment-notice,
+.footer {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <div className="page-container">

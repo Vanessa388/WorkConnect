@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logout } from "../utils/auth";
+import { useTheme } from "../ThemeContext";
 const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
   /\/$/,
   "",
@@ -8,6 +9,7 @@ const API = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(
 
 export default function WorkerProfile() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [showNotifications, setShowNotifications] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -679,6 +681,199 @@ export default function WorkerProfile() {
             padding: 14px 16px;
           }
         }
+
+
+/* =====================================
+   WORKER PROFILE DARK MODE
+===================================== */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .worker-profile-page {
+  background: #101a20 !important;
+  color: #f1f5f7;
+}
+
+/* Dashboard header */
+
+:root[data-theme="dark"] .profile-header {
+  background: #17262e;
+  border-bottom: 1px solid #354b55;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .profile-brand {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .profile-theme-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #536873;
+  border-radius: 50%;
+  background: #263840;
+  color: #ffffff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .profile-theme-button:hover {
+  background: #354b55;
+}
+
+/* Profile summary */
+
+:root[data-theme="dark"] .profile-summary {
+  background: #17262e;
+  border-color: #354b55;
+}
+
+:root[data-theme="dark"] .profile-summary-details h1 {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .profile-job-location {
+  color: #bdcbd1;
+}
+
+:root[data-theme="dark"] .profile-contact-row {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .profile-contact-row span {
+  color: #e3e9ec !important;
+}
+
+:root[data-theme="dark"] .profile-verified-badge {
+  background: #214b35;
+  color: #8ce0a8;
+}
+
+/* Edit profile button */
+
+:root[data-theme="dark"] .profile-edit-btn {
+  background: #263840;
+  border-color: #ff7542;
+  color: #ff9665;
+}
+
+:root[data-theme="dark"] .profile-edit-btn:hover {
+  background: #354b55;
+}
+
+/* Main profile cards */
+
+:root[data-theme="dark"] .profile-card {
+  background: #1d3039;
+  border-color: #354b55;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme="dark"] .profile-card-heading {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .profile-about-text,
+:root[data-theme="dark"] .profile-info-item {
+  color: #d0dadd;
+}
+
+:root[data-theme="dark"] .profile-skill-tag {
+  background: #493326;
+  color: #ffad80;
+}
+
+:root[data-theme="dark"] .profile-portfolio-image {
+  border-color: #40545e;
+  background: #263840;
+}
+
+:root[data-theme="dark"] .profile-no-photos {
+  color: #aebbc1;
+}
+
+/* Verification and account notices */
+
+:root[data-theme="dark"] .profile-container > div[style*="background-color"] {
+  background: #263840 !important;
+  border-color: #536873 !important;
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .profile-container > div[style*="background-color"] span {
+  color: #d0dadd !important;
+}
+
+/* Edit profile modal */
+
+:root[data-theme="dark"] .modal-overlay {
+  background: rgba(0, 0, 0, 0.78);
+}
+
+:root[data-theme="dark"] .modal-card {
+  background: #1d3039;
+  border: 1px solid #40545e;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .modal-title {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .modal-field label {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .modal-field input,
+:root[data-theme="dark"] .modal-field select,
+:root[data-theme="dark"] .modal-field textarea {
+  background: #263840;
+  border-color: #536873;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .modal-field input::placeholder,
+:root[data-theme="dark"] .modal-field textarea::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .modal-field input:focus,
+:root[data-theme="dark"] .modal-field select:focus,
+:root[data-theme="dark"] .modal-field textarea:focus {
+  border-color: #ff7542;
+}
+
+:root[data-theme="dark"] .modal-cancel-btn {
+  background: #344750;
+  border-color: #536873;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .modal-cancel-btn:hover {
+  background: #405761;
+}
+
+/* Smooth transitions */
+
+.worker-profile-page,
+.profile-header,
+.profile-summary,
+.profile-card,
+.modal-card,
+.modal-field input,
+.modal-field select,
+.modal-field textarea,
+.profile-theme-button {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <div className="profile-container">
@@ -690,6 +885,15 @@ export default function WorkerProfile() {
           </a>
 
           <div className="profile-header-actions">
+            <button
+              type="button"
+              className="profile-theme-button"
+              onClick={toggleTheme}
+              aria-label="Toggle colour theme"
+            >
+              {theme === "light" ? "☾" : "☀"}
+            </button>
+
             <button
               type="button"
               className="profile-logout-button"

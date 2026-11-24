@@ -618,6 +618,112 @@ export default function ContactPage() {
             padding: 18px 14px;
           }
         }
+
+
+/* ============================= */
+/* WORKCONNECT CONTACT DARK MODE */
+/* ============================= */
+
+:root[data-theme="dark"] .report-page {
+  background: #101a20;
+  color: #f1f5f7;
+}
+
+/* Contact introduction */
+:root[data-theme="dark"] .report-intro h1 {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .report-intro p {
+  color: #c5d0d5;
+}
+
+/* Side cards and form card */
+:root[data-theme="dark"] .report-card {
+  background: #1d3039;
+  color: #f1f5f7;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .report-side-card h2,
+:root[data-theme="dark"] .report-form-card h2,
+:root[data-theme="dark"] .report-step h3 {
+  color: #f1f5f7;
+}
+
+/* Side card text */
+:root[data-theme="dark"] .report-reason,
+:root[data-theme="dark"] .report-step p {
+  color: #c5d0d5;
+}
+
+/* Form labels */
+:root[data-theme="dark"] .report-field label {
+  color: #f1f5f7;
+}
+
+/* Input fields */
+:root[data-theme="dark"] .report-field input,
+:root[data-theme="dark"] .report-field select,
+:root[data-theme="dark"] .report-field textarea {
+  background: #263840;
+  color: #ffffff;
+  border-color: #40545e;
+}
+
+:root[data-theme="dark"] .report-field input::placeholder,
+:root[data-theme="dark"] .report-field textarea::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .report-field select option {
+  background: #263840;
+  color: #ffffff;
+}
+
+/* Upload area, if used */
+:root[data-theme="dark"] .report-upload {
+  background: #263840;
+  border-color: #80502e;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .report-upload span,
+:root[data-theme="dark"] .report-selected-files {
+  color: #c5d0d5;
+}
+
+/* Success message */
+:root[data-theme="dark"] .report-success h3 {
+  color: #65d69a;
+}
+
+:root[data-theme="dark"] .report-success p {
+  color: #c5d0d5;
+}
+
+/* Footer */
+:root[data-theme="dark"] .about-footer {
+  background: #0b1419;
+  color: #ffffff;
+}
+
+/* Smooth transition */
+.report-page,
+.report-card,
+.report-field input,
+.report-field select,
+.report-field textarea,
+.report-upload,
+.about-footer {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <SharedNavbar />
@@ -673,25 +779,59 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit}>
                 <div className="report-field">
                   <label htmlFor="contact-name">Your Name</label>
-                  <input id="contact-name" name="name" type="text" placeholder="Enter your full name" autoComplete="name" value={form.name} onChange={handleChange} required />
+                  <input
+                    id="contact-name"
+                    name="name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    autoComplete="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 <div className="report-field">
                   <label htmlFor="contact-email">Email Address</label>
-                  <input id="contact-email" name="email" type="email" placeholder="name@example.com" autoComplete="email" value={form.email} onChange={handleChange} required />
+                  <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    autoComplete="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 <div className="report-field">
                   <label htmlFor="contact-phone">Phone Number</label>
-                  <input id="contact-phone" name="phone" type="tel" placeholder="Optional phone number" autoComplete="tel" value={form.phone} onChange={handleChange} />
+                  <input
+                    id="contact-phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="Optional phone number"
+                    autoComplete="tel"
+                    value={form.phone}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div className="report-field">
                   <label htmlFor="contact-subject">Subject</label>
-                  <select id="contact-subject" name="subject" value={form.subject} onChange={handleChange} required>
+                  <select
+                    id="contact-subject"
+                    name="subject"
+                    value={form.subject}
+                    onChange={handleChange}
+                    required
+                  >
                     <option value="">Choose a subject</option>
                     <option value="Account Support">Account Support</option>
-                    <option value="Worker Profile Support">Worker Profile Support</option>
+                    <option value="Worker Profile Support">
+                      Worker Profile Support
+                    </option>
                     <option value="Partnership">Partnership</option>
                     <option value="General Question">General Question</option>
                   </select>
@@ -699,7 +839,15 @@ export default function ContactPage() {
 
                 <div className="report-field">
                   <label htmlFor="contact-message">Message</label>
-                  <textarea id="contact-message" name="message" placeholder="How can we help?" rows="4" value={form.message} onChange={handleChange} required />
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="How can we help?"
+                    rows="4"
+                    value={form.message}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 {error && (
@@ -708,7 +856,11 @@ export default function ContactPage() {
                   </p>
                 )}
 
-                <button className="report-submit" type="submit" disabled={submitting}>
+                <button
+                  className="report-submit"
+                  type="submit"
+                  disabled={submitting}
+                >
                   {submitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
@@ -735,7 +887,8 @@ export default function ContactPage() {
                 <div>
                   <h3>Admin reviews</h3>
                   <p>
-                    Our team reviews your message and responds within 1–2 business days.
+                    Our team reviews your message and responds within 1–2
+                    business days.
                   </p>
                 </div>
               </div>

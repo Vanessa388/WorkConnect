@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../ThemeContext";
 
 export default function SharedNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  const { theme, toggleTheme } = useTheme();
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -21,6 +24,7 @@ export default function SharedNavbar() {
           padding: 16px 24px;
           border-bottom: 1px solid #eee5dc;
           background: #fff8ef;
+          transition: background 0.3s, color 0.3s;
         }
 
         .navbar .brand {
@@ -103,6 +107,24 @@ export default function SharedNavbar() {
           background: #b93e0f;
         }
 
+        .navbar .theme-toggle {
+          width: 36px;
+          height: 36px;
+          display: grid;
+          place-items: center;
+          border: 1px solid #e6d9cc;
+          border-radius: 50%;
+          background: #ffffff;
+          color: #333333;
+          font-size: 19px;
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+
+        .navbar .theme-toggle:hover {
+          background: #f5eee6;
+        }
+
         .navbar .menu-toggle {
           display: none;
           width: 34px;
@@ -139,6 +161,40 @@ export default function SharedNavbar() {
           text-decoration: none;
         }
 
+        /* DARK MODE NAVBAR */
+
+        :root[data-theme="dark"] .navbar {
+          background: #17252b;
+          border-bottom-color: #34464e;
+        }
+
+        :root[data-theme="dark"] .navbar .brand,
+        :root[data-theme="dark"] .navbar .desktop-nav a,
+        :root[data-theme="dark"] .navbar .login-button,
+        :root[data-theme="dark"] .navbar .menu-toggle {
+          color: #f5f5f5;
+        }
+
+        :root[data-theme="dark"] .navbar .mobile-nav {
+          background: #17252b;
+          border-bottom-color: #34464e;
+        }
+
+        :root[data-theme="dark"] .navbar .mobile-nav a {
+          color: #f5f5f5;
+          border-top-color: #34464e;
+        }
+
+        :root[data-theme="dark"] .navbar .theme-toggle {
+          background: #263a43;
+          border-color: #49616b;
+          color: #ffffff;
+        }
+
+        :root[data-theme="dark"] .navbar .theme-toggle:hover {
+          background: #344e59;
+        }
+
         @media (max-width: 600px) {
           .navbar {
             min-height: 55px;
@@ -152,12 +208,25 @@ export default function SharedNavbar() {
           .navbar .desktop-nav { display: none; }
           .navbar-actions { gap: 9px; }
           .navbar .login-button { font-size: 11px; }
+
           .navbar .signup-button {
             padding: 8px 10px;
             border-radius: 8px;
             font-size: 11px;
           }
-          .navbar .menu-toggle { display: grid; width: 30px; height: 32px; }
+
+          .navbar .theme-toggle {
+            width: 31px;
+            height: 31px;
+            font-size: 17px;
+          }
+
+          .navbar .menu-toggle {
+            display: grid;
+            width: 30px;
+            height: 32px;
+          }
+
           .navbar .mobile-nav { display: flex; }
         }
       `}</style>
@@ -175,8 +244,34 @@ export default function SharedNavbar() {
         </nav>
 
         <div className="navbar-actions">
-          <button className="login-button" type="button" onClick={() => navigate("/login")}>Login</button>
-          <button className="signup-button" type="button" onClick={() => navigate("/signup")}>Sign Up</button>
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label={
+              theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+            }
+            title={theme === "light" ? "Dark mode" : "Light mode"}
+          >
+            {theme === "light" ? "☾" : "☀"}
+          </button>
+
+          <button
+            className="login-button"
+            type="button"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </button>
+
+          <button
+            className="signup-button"
+            type="button"
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </button>
+
           <button
             className="menu-toggle"
             type="button"
@@ -190,9 +285,15 @@ export default function SharedNavbar() {
 
         {menuOpen && (
           <nav className="mobile-nav" aria-label="Mobile navigation">
-            <Link to="/" onClick={closeMenu}>Home</Link>
-            <Link to="/about" onClick={closeMenu}>About</Link>
-            <Link to="/contact" onClick={closeMenu}>Contact</Link>
+            <Link to="/" onClick={closeMenu}>
+              Home
+            </Link>
+            <Link to="/about" onClick={closeMenu}>
+              About
+            </Link>
+            <Link to="/contact" onClick={closeMenu}>
+              Contact
+            </Link>
           </nav>
         )}
       </header>

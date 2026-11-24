@@ -515,6 +515,138 @@ export default function LoginPage() {
           }
 
         }
+
+
+/* ============================= */
+/* WORKCONNECT LOGIN DARK MODE */
+/* ============================= */
+
+:root[data-theme="dark"] .login-page {
+  background: #101a20;
+  color: #f1f5f7;
+}
+
+/* Header */
+:root[data-theme="dark"] .login-header {
+  background: #17262e;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme="dark"] .login-brand {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .login-nav a {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .login-menu-button {
+  color: #f1f5f7;
+}
+
+/* Login card */
+:root[data-theme="dark"] .login-card {
+  background: #1d3039;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .login-card h1 {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .login-subtitle {
+  color: #c5d0d5;
+}
+
+/* Form labels */
+:root[data-theme="dark"] .login-field label,
+:root[data-theme="dark"] .login-remember {
+  color: #e3e9ec;
+}
+
+/* Input fields */
+:root[data-theme="dark"] .login-input-wrap {
+  background: #263840;
+  border-color: #40545e;
+}
+
+:root[data-theme="dark"] .login-input-wrap input {
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .login-input-wrap input::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .login-input-icon,
+:root[data-theme="dark"] .login-password-toggle {
+  color: #c5d0d5;
+}
+
+/* Remember me and forgot password */
+:root[data-theme="dark"] .login-forgot,
+:root[data-theme="dark"] .login-signup a {
+  color: #ff9665;
+}
+
+/* Divider */
+:root[data-theme="dark"] .login-divider {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .login-divider::before,
+:root[data-theme="dark"] .login-divider::after {
+  background: #40545e;
+}
+
+/* Sign up text */
+:root[data-theme="dark"] .login-signup {
+  color: #c5d0d5;
+}
+
+/* Footer */
+:root[data-theme="dark"] .login-footer {
+  color: #aebbc1;
+}
+
+/* Mobile navigation */
+@media (max-width: 420px) {
+  :root[data-theme="dark"] .login-nav {
+    background: #17262e;
+  }
+
+  :root[data-theme="dark"] .login-nav a {
+    color: #e3e9ec;
+  }
+}
+
+/* Smooth transition */
+.login-page,
+.login-card,
+.login-input-wrap,
+.login-header,
+.login-footer {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* FIX LOGIN PAGE DARK BACKGROUND */
+:root[data-theme="dark"] body {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .login-page,
+:root[data-theme="dark"] .login-main {
+  background: #101a20 !important;
+}
+
+
       `}</style>
 
       <SharedNavbar />

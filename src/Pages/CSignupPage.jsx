@@ -563,6 +563,110 @@ export default function SignupPage() {
             font-size: 30px;
           }
         }
+
+        
+/* ================================
+   SIGNUP PAGE DARK MODE
+================================ */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .signup-page {
+  background: #101a20 !important;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .signup-card {
+  background: #1d3039;
+  border-color: #354b55;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .signup-brand {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .signup-heading {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .signup-subtitle {
+  color: #bdcbd1;
+}
+
+:root[data-theme="dark"] .signup-account-label {
+  color: #c5d0d5;
+}
+
+:root[data-theme="dark"] .signup-type-button:not(.active) {
+  background: #344750;
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .signup-type-button.active {
+  background: #f0440a;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .signup-field label {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .signup-field input,
+:root[data-theme="dark"] .signup-password-wrap {
+  background: #263840;
+  border-color: #40545e;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .signup-field input {
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .signup-field input::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .signup-password-wrap input {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .signup-eye-button {
+  color: #d0dadd;
+}
+
+:root[data-theme="dark"] .signup-login {
+  color: #c5d0d5;
+}
+
+:root[data-theme="dark"] .signup-login a {
+  color: #ff9665;
+}
+
+:root[data-theme="dark"] .login-footer {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .signup-error {
+  color: #ff8b82;
+}
+
+/* Smooth theme transition */
+.signup-page,
+.signup-card,
+.signup-field input,
+.signup-password-wrap,
+.signup-type-button {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <SharedNavbar />
@@ -573,8 +677,9 @@ export default function SignupPage() {
             <span className="signup-account-label">Need a Worker?</span>
             <button
               type="button"
-              className={`signup-type-button ${accountType === "customer" ? "active" : ""
-                }`}
+              className={`signup-type-button ${
+                accountType === "customer" ? "active" : ""
+              }`}
               onClick={() => setAccountType("customer")}
               aria-pressed={accountType === "customer"}
             >

@@ -552,6 +552,221 @@ export default function PublicWorkerProfile() {
             justify-content: center;
           }
         }
+
+
+/* =====================================
+   PUBLIC WORKER PROFILE DARK MODE
+===================================== */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .public-profile-page {
+  background: #101a20 !important;
+  color: #f1f5f7;
+}
+
+/* Top navigation */
+:root[data-theme="dark"] .public-nav-bar {
+  background: #17262e;
+  border-color: #354b55;
+}
+
+:root[data-theme="dark"] .public-nav-bar span {
+  color: #d0dadd !important;
+}
+
+:root[data-theme="dark"] .public-back-btn {
+  background: #263840;
+  border-color: #536873;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .public-back-btn:hover {
+  background: #354b55;
+}
+
+/* Main hero section */
+:root[data-theme="dark"] .public-hero-card,
+:root[data-theme="dark"] .public-card {
+  background: #1d3039;
+  border-color: #354b55;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="dark"] .public-hero-text h1,
+:root[data-theme="dark"] .public-card-title,
+:root[data-theme="dark"] .add-review-box h3 {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .public-hero-skill {
+  color: #c5d0d5;
+}
+
+:root[data-theme="dark"] .public-verified-pill {
+  background: #214b35;
+  color: #8ce0a8;
+}
+
+/* Hero actions */
+:root[data-theme="dark"] .public-hero-report-btn {
+  background: #263840;
+  color: #ff8b8b;
+  border-color: #a94d4d;
+}
+
+:root[data-theme="dark"] .public-hero-report-btn:hover {
+  background: #493035;
+}
+
+/* Information and portfolio */
+:root[data-theme="dark"] .public-card-text,
+:root[data-theme="dark"] .public-info-row,
+:root[data-theme="dark"] .public-info-row strong {
+  color: #d0dadd;
+}
+
+:root[data-theme="dark"] .public-portfolio-img {
+  border-color: #40545e;
+}
+
+/* Reviews */
+:root[data-theme="dark"] .review-card {
+  background: #263840;
+  border-color: #40545e;
+}
+
+:root[data-theme="dark"] .reviewer-name {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .review-comment {
+  color: #d0dadd;
+}
+
+:root[data-theme="dark"] .add-review-box {
+  border-color: #536873;
+}
+
+:root[data-theme="dark"] .review-field label {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .review-field input,
+:root[data-theme="dark"] .review-field select,
+:root[data-theme="dark"] .review-field textarea {
+  background: #263840;
+  border-color: #536873;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .review-field input::placeholder,
+:root[data-theme="dark"] .review-field textarea::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .review-field select option {
+  background: #263840;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .review-submit-btn {
+  background: #ef5a20;
+}
+
+:root[data-theme="dark"] .review-submit-btn:hover {
+  background: #d94a15;
+}
+
+/* Report modal */
+:root[data-theme="dark"] .report-modal-overlay {
+  background: rgba(0, 0, 0, 0.82);
+}
+
+:root[data-theme="dark"] .report-modal-card {
+  background: #1d3039;
+  color: #f1f5f7;
+  border: 1px solid #40545e;
+}
+
+:root[data-theme="dark"] .report-modal-header {
+  border-color: #40545e;
+}
+
+:root[data-theme="dark"] .report-modal-header h2 {
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .report-modal-close {
+  color: #d0dadd;
+}
+
+:root[data-theme="dark"] .report-modal-card p {
+  color: #c5d0d5 !important;
+}
+
+:root[data-theme="dark"] .report-modal-card label {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .report-modal-card input,
+:root[data-theme="dark"] .report-modal-card select,
+:root[data-theme="dark"] .report-modal-card textarea {
+  background: #263840 !important;
+  border-color: #536873 !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .report-modal-card input::placeholder,
+:root[data-theme="dark"] .report-modal-card textarea::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .report-modal-card select option {
+  background: #263840;
+  color: #ffffff;
+}
+
+/* Report modal cancel button */
+:root[data-theme="dark"] .report-modal-card button[style*="background: rgb(241"] {
+  background: #344750 !important;
+  border-color: #536873 !important;
+  color: #ffffff !important;
+}
+
+/* Suspended profile notice */
+:root[data-theme="dark"] .public-profile-page div[style*="background: rgb(254"] {
+  color: #ffb4b4 !important;
+}
+
+/* Smooth theme transition */
+.public-profile-page,
+.public-nav-bar,
+.public-hero-card,
+.public-card,
+.review-card,
+.report-modal-card,
+.public-back-btn,
+.review-field input,
+.review-field select,
+.review-field textarea {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+/* Mobile layout */
+@media (max-width: 820px) {
+  :root[data-theme="dark"] .public-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
       `}</style>
 
       {/* Top Navbar */}
@@ -597,12 +812,34 @@ export default function PublicWorkerProfile() {
           <>
             {/* Banned / Suspended Notice */}
             {worker.banned && (
-              <div style={{ background: "#fee2e2", border: "1.5px solid #ef4444", color: "#991b1b", padding: "16px 20px", borderRadius: "12px", marginBottom: "22px", display: "flex", alignItems: "center", gap: "12px" }}>
+              <div
+                style={{
+                  background: "#fee2e2",
+                  border: "1.5px solid #ef4444",
+                  color: "#991b1b",
+                  padding: "16px 20px",
+                  borderRadius: "12px",
+                  marginBottom: "22px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
                 <span style={{ fontSize: "28px" }}>🚫</span>
                 <div>
-                  <strong style={{ fontSize: "16px" }}>This Artisan's Profile Is Currently Suspended</strong>
-                  <div style={{ fontSize: "13px", color: "#7f1d1d", marginTop: "3px" }}>
-                    WorkConnect administration has temporarily restricted direct contact with this artisan pending resolution of customer complaints.
+                  <strong style={{ fontSize: "16px" }}>
+                    This Artisan's Profile Is Currently Suspended
+                  </strong>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "#7f1d1d",
+                      marginTop: "3px",
+                    }}
+                  >
+                    WorkConnect administration has temporarily restricted direct
+                    contact with this artisan pending resolution of customer
+                    complaints.
                   </div>
                 </div>
               </div>
@@ -626,7 +863,17 @@ export default function PublicWorkerProfile() {
                       <span className="public-verified-pill">✓ Verified</span>
                     )}
                     {worker.banned && (
-                      <span style={{ marginLeft: "10px", background: "#fee2e2", color: "#b91c1c", padding: "3px 10px", borderRadius: "20px", fontSize: "13px", fontWeight: "700" }}>
+                      <span
+                        style={{
+                          marginLeft: "10px",
+                          background: "#fee2e2",
+                          color: "#b91c1c",
+                          padding: "3px 10px",
+                          borderRadius: "20px",
+                          fontSize: "13px",
+                          fontWeight: "700",
+                        }}
+                      >
                         🚫 Suspended
                       </span>
                     )}
@@ -637,7 +884,8 @@ export default function PublicWorkerProfile() {
                   <p style={{ margin: 0, color: "#f59e0b", fontWeight: "700" }}>
                     ★ {worker.rating || "5.0"}{" "}
                     <span style={{ color: "#777", fontWeight: "normal" }}>
-                      ({reviews.length} customer review{reviews.length !== 1 ? "s" : ""})
+                      ({reviews.length} customer review
+                      {reviews.length !== 1 ? "s" : ""})
                     </span>
                   </p>
                 </div>
@@ -672,7 +920,10 @@ export default function PublicWorkerProfile() {
                 <div className="public-card">
                   <h2 className="public-card-title">👨‍🔧 About this Artisan</h2>
                   <p className="public-card-text">
-                    {worker.about || "This verified professional provides reliable craftsmanship in " + worker.skill + " services."}
+                    {worker.about ||
+                      "This verified professional provides reliable craftsmanship in " +
+                        worker.skill +
+                        " services."}
                   </p>
                 </div>
 
@@ -683,7 +934,8 @@ export default function PublicWorkerProfile() {
                     <span>📅</span>
                     <span>
                       <strong>Available Days:</strong>{" "}
-                      {Array.isArray(worker.available_days) && worker.available_days.length > 0
+                      {Array.isArray(worker.available_days) &&
+                      worker.available_days.length > 0
                         ? worker.available_days.join(", ")
                         : worker.available_days || "Monday – Saturday"}
                     </span>
@@ -692,14 +944,16 @@ export default function PublicWorkerProfile() {
                   <div className="public-info-row">
                     <span>⏰</span>
                     <span>
-                      <strong>Hours:</strong> {worker.working_hours || "08:00 – 18:00"}
+                      <strong>Hours:</strong>{" "}
+                      {worker.working_hours || "08:00 – 18:00"}
                     </span>
                   </div>
 
                   <div className="public-info-row">
                     <span>🎖️</span>
                     <span>
-                      <strong>Experience:</strong> {worker.experience || "3+ years"}
+                      <strong>Experience:</strong>{" "}
+                      {worker.experience || "3+ years"}
                     </span>
                   </div>
 
@@ -716,7 +970,9 @@ export default function PublicWorkerProfile() {
                 {/* Portfolio Card */}
                 {portfolioPhotos.length > 0 && (
                   <div className="public-card">
-                    <h2 className="public-card-title">📷 Work Portfolio Photos</h2>
+                    <h2 className="public-card-title">
+                      📷 Work Portfolio Photos
+                    </h2>
                     <div className="public-portfolio-grid">
                       {portfolioPhotos.map((url, i) => (
                         <img
@@ -753,7 +1009,8 @@ export default function PublicWorkerProfile() {
                     ))
                   ) : (
                     <p style={{ color: "#777", fontSize: "14px" }}>
-                      No reviews yet for this artisan. Be the first to share your experience below!
+                      No reviews yet for this artisan. Be the first to share
+                      your experience below!
                     </p>
                   )}
 
@@ -762,12 +1019,24 @@ export default function PublicWorkerProfile() {
                     <h3>Leave a Review for {worker.name}</h3>
 
                     {reviewError && (
-                      <p style={{ color: "#d92d20", fontSize: "13px", margin: "0 0 10px" }}>
+                      <p
+                        style={{
+                          color: "#d92d20",
+                          fontSize: "13px",
+                          margin: "0 0 10px",
+                        }}
+                      >
                         {reviewError}
                       </p>
                     )}
                     {reviewSuccess && (
-                      <p style={{ color: "#027a48", fontSize: "13px", margin: "0 0 10px" }}>
+                      <p
+                        style={{
+                          color: "#027a48",
+                          fontSize: "13px",
+                          margin: "0 0 10px",
+                        }}
+                      >
                         {reviewSuccess}
                       </p>
                     )}
@@ -787,7 +1056,9 @@ export default function PublicWorkerProfile() {
                         <label>Your Rating</label>
                         <select
                           value={reviewRating}
-                          onChange={(e) => setReviewRating(Number(e.target.value))}
+                          onChange={(e) =>
+                            setReviewRating(Number(e.target.value))
+                          }
                         >
                           <option value="5">★★★★★ (5 Stars - Excellent)</option>
                           <option value="4">★★★★☆ (4 Stars - Very Good)</option>
@@ -813,7 +1084,9 @@ export default function PublicWorkerProfile() {
                         className="review-submit-btn"
                         disabled={submittingReview}
                       >
-                        {submittingReview ? "Submitting Review…" : "Post Review"}
+                        {submittingReview
+                          ? "Submitting Review…"
+                          : "Post Review"}
                       </button>
                     </form>
                   </div>
@@ -826,10 +1099,18 @@ export default function PublicWorkerProfile() {
 
       {/* ── Report Artisan Modal ────────────────────────────────────────── */}
       {showReportModal && (
-        <div className="report-modal-overlay" onClick={() => setShowReportModal(false)}>
-          <div className="report-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="report-modal-overlay"
+          onClick={() => setShowReportModal(false)}
+        >
+          <div
+            className="report-modal-card"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="report-modal-header">
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <span style={{ fontSize: "24px" }}>🚨</span>
                 <h2 style={{ margin: 0, fontSize: "20px", color: "#101432" }}>
                   Report Artisan
@@ -844,63 +1125,146 @@ export default function PublicWorkerProfile() {
               </button>
             </div>
 
-            <p style={{ color: "#666", fontSize: "14px", margin: "12px 0 16px" }}>
-              File an official incident report against <strong>{worker?.name}</strong> (Trade: {worker?.skill}, Artisan ID: #{worker?.id}). WorkConnect administrators will review this complaint and take corrective action or disciplinary ban if justified.
+            <p
+              style={{ color: "#666", fontSize: "14px", margin: "12px 0 16px" }}
+            >
+              File an official incident report against{" "}
+              <strong>{worker?.name}</strong> (Trade: {worker?.skill}, Artisan
+              ID: #{worker?.id}). WorkConnect administrators will review this
+              complaint and take corrective action or disciplinary ban if
+              justified.
             </p>
 
             {reportError && (
-              <div style={{ background: "#fef3f2", color: "#b42318", padding: "10px 14px", borderRadius: "8px", fontSize: "13px", marginBottom: "14px" }}>
+              <div
+                style={{
+                  background: "#fef3f2",
+                  color: "#b42318",
+                  padding: "10px 14px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  marginBottom: "14px",
+                }}
+              >
                 {reportError}
               </div>
             )}
 
             {reportSuccess && (
-              <div style={{ background: "#ecfdf5", color: "#065f46", padding: "10px 14px", borderRadius: "8px", fontSize: "13px", marginBottom: "14px" }}>
+              <div
+                style={{
+                  background: "#ecfdf5",
+                  color: "#065f46",
+                  padding: "10px 14px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  marginBottom: "14px",
+                }}
+              >
                 {reportSuccess}
               </div>
             )}
 
             <form onSubmit={handleSubmitReport}>
               <div style={{ marginBottom: "14px" }}>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    marginBottom: "6px",
+                  }}
+                >
                   Reason for Report *
                 </label>
                 <select
-                  style={{ width: "100%", padding: "11px 12px", border: "1px solid #d2d6dc", borderRadius: "8px", fontSize: "14px", background: "#fff" }}
+                  style={{
+                    width: "100%",
+                    padding: "11px 12px",
+                    border: "1px solid #d2d6dc",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    background: "#fff",
+                  }}
                   value={reportReason}
                   onChange={(e) => setReportReason(e.target.value)}
                   required
                 >
-                  <option value="Unprofessional or Abusive Behavior">Unprofessional or Abusive Behavior</option>
-                  <option value="Payment Fraud / Scam / Overcharging">Payment Fraud / Scam / Overcharging</option>
-                  <option value="Did Not Show Up / Abandoned Work">Did Not Show Up / Abandoned Work</option>
-                  <option value="Poor Quality / Damaged Property">Poor Quality / Damaged Property</option>
-                  <option value="Impersonation / Fake Credentials">Impersonation / Fake Credentials</option>
-                  <option value="Other Safety or Quality Issue">Other Safety or Quality Issue</option>
+                  <option value="Unprofessional or Abusive Behavior">
+                    Unprofessional or Abusive Behavior
+                  </option>
+                  <option value="Payment Fraud / Scam / Overcharging">
+                    Payment Fraud / Scam / Overcharging
+                  </option>
+                  <option value="Did Not Show Up / Abandoned Work">
+                    Did Not Show Up / Abandoned Work
+                  </option>
+                  <option value="Poor Quality / Damaged Property">
+                    Poor Quality / Damaged Property
+                  </option>
+                  <option value="Impersonation / Fake Credentials">
+                    Impersonation / Fake Credentials
+                  </option>
+                  <option value="Other Safety or Quality Issue">
+                    Other Safety or Quality Issue
+                  </option>
                 </select>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "14px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "12px",
+                  marginBottom: "14px",
+                }}
+              >
                 <div>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      marginBottom: "6px",
+                    }}
+                  >
                     Your Full Name
                   </label>
                   <input
                     type="text"
                     placeholder="e.g. Samuel Okeke"
-                    style={{ width: "100%", padding: "10px 12px", border: "1px solid #d2d6dc", borderRadius: "8px", fontSize: "14px" }}
+                    style={{
+                      width: "100%",
+                      padding: "10px 12px",
+                      border: "1px solid #d2d6dc",
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                    }}
                     value={reportName}
                     onChange={(e) => setReportName(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      marginBottom: "6px",
+                    }}
+                  >
                     Your Phone Number
                   </label>
                   <input
                     type="tel"
                     placeholder="+234..."
-                    style={{ width: "100%", padding: "10px 12px", border: "1px solid #d2d6dc", borderRadius: "8px", fontSize: "14px" }}
+                    style={{
+                      width: "100%",
+                      padding: "10px 12px",
+                      border: "1px solid #d2d6dc",
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                    }}
                     value={reportPhone}
                     onChange={(e) => setReportPhone(e.target.value)}
                   />
@@ -908,43 +1272,91 @@ export default function PublicWorkerProfile() {
               </div>
 
               <div style={{ marginBottom: "14px" }}>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    marginBottom: "6px",
+                  }}
+                >
                   Your Email Address
                 </label>
                 <input
                   type="email"
                   placeholder="name@example.com"
-                  style={{ width: "100%", padding: "10px 12px", border: "1px solid #d2d6dc", borderRadius: "8px", fontSize: "14px" }}
+                  style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    border: "1px solid #d2d6dc",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                  }}
                   value={reportEmail}
                   onChange={(e) => setReportEmail(e.target.value)}
                 />
               </div>
 
               <div style={{ marginBottom: "18px" }}>
-                <label style={{ display: "block", fontSize: "13px", fontWeight: "700", marginBottom: "6px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "13px",
+                    fontWeight: "700",
+                    marginBottom: "6px",
+                  }}
+                >
                   Incident Description & Details *
                 </label>
                 <textarea
                   rows="4"
                   placeholder="Explain clearly what took place: agreed price vs demanded price, damages, safety concerns, or missed job dates..."
-                  style={{ width: "100%", padding: "10px 12px", border: "1px solid #d2d6dc", borderRadius: "8px", fontSize: "14px", resize: "vertical" }}
+                  style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    border: "1px solid #d2d6dc",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    resize: "vertical",
+                  }}
                   value={reportDetails}
                   onChange={(e) => setReportDetails(e.target.value)}
                   required
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                }}
+              >
                 <button
                   type="button"
-                  style={{ padding: "10px 18px", background: "#f1f5f9", border: "1px solid #cbd5e1", borderRadius: "8px", cursor: "pointer", fontWeight: "600" }}
+                  style={{
+                    padding: "10px 18px",
+                    background: "#f1f5f9",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                  }}
                   onClick={() => setShowReportModal(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  style={{ padding: "10px 22px", background: "#dc2626", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "700" }}
+                  style={{
+                    padding: "10px 22px",
+                    background: "#dc2626",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontWeight: "700",
+                  }}
                   disabled={submittingReport}
                 >
                   {submittingReport ? "Submitting…" : "Submit Report"}

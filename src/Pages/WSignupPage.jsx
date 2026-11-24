@@ -877,6 +877,185 @@ export default function WorkerSignupPage() {
             font-size: 20px;
           }
         }
+
+
+/* =====================================
+   WORKER SIGNUP DARK MODE
+===================================== */
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root {
+  background: #101a20 !important;
+}
+
+:root[data-theme="dark"] .worker-signup-page {
+  background: #101a20 !important;
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .worker-signup-container {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .worker-signup-brand {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .worker-signup-heading {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .worker-signup-subtitle {
+  color: #bdcbd1;
+}
+
+/* Form sections */
+
+:root[data-theme="dark"] .worker-section,
+:root[data-theme="dark"] .worker-portfolio {
+  background: #1d3039;
+  border-color: #354b55;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme="dark"] .worker-section-heading,
+:root[data-theme="dark"] .worker-portfolio-heading {
+  color: #f1f5f7;
+}
+
+:root[data-theme="dark"] .worker-field label,
+:root[data-theme="dark"] .worker-field-label,
+:root[data-theme="dark"] .worker-time-field label {
+  color: #e3e9ec;
+}
+
+/* Inputs, dropdowns and text areas */
+
+:root[data-theme="dark"] .worker-field input,
+:root[data-theme="dark"] .worker-field select,
+:root[data-theme="dark"] .worker-field textarea,
+:root[data-theme="dark"] .worker-time-field select {
+  background: #263840;
+  border-color: #40545e;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .worker-field input::placeholder,
+:root[data-theme="dark"] .worker-field textarea::placeholder {
+  color: #aebbc1;
+}
+
+:root[data-theme="dark"] .worker-field select option,
+:root[data-theme="dark"] .worker-time-field select option {
+  background: #263840;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .worker-field input:focus,
+:root[data-theme="dark"] .worker-field select:focus,
+:root[data-theme="dark"] .worker-field textarea:focus,
+:root[data-theme="dark"] .worker-time-field select:focus {
+  border-color: #ff7542;
+}
+
+/* Password fields */
+
+:root[data-theme="dark"] .worker-password-wrap {
+  background: #263840;
+  border-color: #40545e;
+}
+
+:root[data-theme="dark"] .worker-password-wrap input {
+  background: transparent;
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .worker-password-toggle {
+  color: #d0dadd;
+}
+
+/* Profile photo upload */
+
+:root[data-theme="dark"] .worker-signup-container .worker-field > div:first-child {
+  background-color: #263840 !important;
+}
+
+:root[data-theme="dark"] .worker-signup-container .worker-field > div label {
+  color: #f1f5f7 !important;
+}
+
+:root[data-theme="dark"] .worker-signup-container .worker-field > div p {
+  color: #aebbc1 !important;
+}
+
+/* Availability */
+
+:root[data-theme="dark"] .worker-day {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .worker-day input {
+  accent-color: #ff7542;
+}
+
+/* Portfolio uploads */
+
+:root[data-theme="dark"] .worker-portfolio-note {
+  color: #bdcbd1;
+}
+
+:root[data-theme="dark"] .worker-photo-slot {
+  background: #263840;
+  border-color: #60737c;
+}
+
+:root[data-theme="dark"] .worker-photo-slot label {
+  color: #e3e9ec;
+}
+
+:root[data-theme="dark"] .worker-photo-icon {
+  color: #ff9665;
+}
+
+/* Error and login text */
+
+:root[data-theme="dark"] .worker-error {
+  color: #ff8b82;
+}
+
+:root[data-theme="dark"] .worker-login-link {
+  color: #bdcbd1;
+}
+
+:root[data-theme="dark"] .worker-login-link a {
+  color: #ff9665;
+}
+
+/* Footer */
+
+:root[data-theme="dark"] .login-footer {
+  background: #17262e;
+  border-color: #354b55;
+  color: #aebbc1;
+}
+
+/* Smooth transitions */
+
+.worker-signup-page,
+.worker-section,
+.worker-portfolio,
+.worker-field input,
+.worker-field select,
+.worker-field textarea,
+.worker-photo-slot,
+.login-footer {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+
+
       `}</style>
 
       <SharedNavbar />
@@ -896,31 +1075,55 @@ export default function WorkerSignupPage() {
             </h2>
 
             <div className="worker-form-grid">
-              <div className="worker-field" style={{ gridColumn: "1 / -1", display: "flex", alignItems: "center", gap: "20px", padding: "8px 0 16px" }}>
-                <div style={{
-                  width: "84px",
-                  height: "84px",
-                  borderRadius: "50%",
-                  backgroundColor: "#fff0e6",
-                  border: "2px dashed #f4510b",
+              <div
+                className="worker-field"
+                style={{
+                  gridColumn: "1 / -1",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  overflow: "hidden",
-                  flexShrink: 0
-                }}>
+                  gap: "20px",
+                  padding: "8px 0 16px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "84px",
+                    height: "84px",
+                    borderRadius: "50%",
+                    backgroundColor: "#fff0e6",
+                    border: "2px dashed #f4510b",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                  }}
+                >
                   {profilePhoto ? (
                     <img
                       src={URL.createObjectURL(profilePhoto)}
                       alt="Profile preview"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
                     />
                   ) : (
                     <span style={{ fontSize: "36px" }}>👤</span>
                   )}
                 </div>
                 <div>
-                  <label htmlFor="worker-avatar-input" style={{ fontWeight: "700", color: "#101432", display: "block", marginBottom: "5px", fontSize: "15px" }}>
+                  <label
+                    htmlFor="worker-avatar-input"
+                    style={{
+                      fontWeight: "700",
+                      color: "#101432",
+                      display: "block",
+                      marginBottom: "5px",
+                      fontSize: "15px",
+                    }}
+                  >
                     Profile Photo (Your Picture)
                   </label>
                   <input
@@ -930,8 +1133,15 @@ export default function WorkerSignupPage() {
                     onChange={handleProfilePhotoChange}
                     style={{ fontSize: "14px" }}
                   />
-                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#777" }}>
-                    This will be shown to customers as your official profile picture.
+                  <p
+                    style={{
+                      margin: "4px 0 0",
+                      fontSize: "12px",
+                      color: "#777",
+                    }}
+                  >
+                    This will be shown to customers as your official profile
+                    picture.
                   </p>
                 </div>
               </div>
@@ -1159,7 +1369,6 @@ export default function WorkerSignupPage() {
                         )}
                       </option>
                     );
-
                   })}
                 </select>
               </div>
@@ -1182,7 +1391,6 @@ export default function WorkerSignupPage() {
                         )}
                       </option>
                     );
-
                   })}
                 </select>
               </div>
@@ -1236,7 +1444,6 @@ export default function WorkerSignupPage() {
                     )}
                   </div>
                 );
-            
               })}
             </div>
           </section>
